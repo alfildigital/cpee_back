@@ -1,0 +1,3 @@
+# Bloquear todo acceso directo web a la carpeta de archivos subidos.
+# Los archivos se sirven únicamente a través del controlador (validación de sesión).
+Require all denied

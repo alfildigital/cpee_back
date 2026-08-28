@@ -1,0 +1,40 @@
+# ======================================================================
+#  CPEE - Patrón de ruteo y Document Root seguro
+#  - Estrategia: el documento root web efectivo es public/
+#  - Todo tráfico se reescribe hacia public/index.php (Clean URLs)
+#  - Se deniegan archivos/directorios sensibles del proyecto
+# ======================================================================
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Evitar listado de directorios
+    Options -Indexes
+
+    # ------------------------------------------------------------------
+    # BLOQUEO DIRECTO DE CONTENIDO PRIVADO (Document Root Seguro)
+    # Sólo public/ debe poder servirse; estas rutas quedan prohibidas.
+    # ------------------------------------------------------------------
+    RewriteRule ^(\.env|\.git|\.agent|documentacion|uploads|public/\.htaccess)(/|$) - [F,L]
+    RewriteRule ^app(/|$) - [F,L]
+    RewriteRule ^database(/|$) - [F,L]
+
+    # Redirigir todo el tráfico a la carpeta public/ (única raíz web)
+    RewriteRule ^$ public/ [L]
+    RewriteRule (.*) public/$1 [L]
+</IfModule>
+
+# ------------------------------------------------------------------
+# Bloquear cualquier archivo/directorio oculto (dotfiles) en la raíz
+# (.env, .gitignore, .htaccess, etc.)
+# ------------------------------------------------------------------
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+# ------------------------------------------------------------------
+# Denegar intentos de acceder a archivos sensibles por extensión
+# ------------------------------------------------------------------
+<FilesMatch "\.(sql|log|ini|env|bak)$">
+    Require all denied
+</FilesMatch>
