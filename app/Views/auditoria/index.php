@@ -66,16 +66,18 @@
                                 <td><?= htmlspecialchars($log['registro_id']) ?></td>
                                 <td>
                                     <?php if ($log['datos_anteriores']): ?>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#datosModal<?= $log['id'] ?>_ant">Ver</button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#datosModal<?= $log['id'] ?>_ant">Ver</button>
                                         <!-- Modal -->
-                                        <div class="modal fade" id="datosModal<?= $log['id'] ?>_ant" tabindex="-1" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                        <div class="modal fade" id="datosModal<?= $log['id'] ?>_ant" tabindex="-1" role="dialog" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title">Datos Anteriores (Log ID: <?= $log['id'] ?>)</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
                                                     </div>
-                                                    <div class="modal-body">
+                                                    <div class="modal-body pre-scrollable" style="max-height:70vh;overflow:auto;">
                                                         <pre><code><?= htmlspecialchars(json_encode(json_decode($log['datos_anteriores']), JSON_PRETTY_PRINT)) ?></code></pre>
                                                     </div>
                                                 </div>
@@ -87,16 +89,18 @@
                                 </td>
                                 <td>
                                     <?php if ($log['datos_nuevos']): ?>
-                                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#datosModal<?= $log['id'] ?>_nuevos">Ver</button>
+                                        <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#datosModal<?= $log['id'] ?>_nuevos">Ver</button>
                                         <!-- Modal -->
-                                        <div class="modal fade" id="datosModal<?= $log['id'] ?>_nuevos" tabindex="-1" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                        <div class="modal fade" id="datosModal<?= $log['id'] ?>_nuevos" tabindex="-1" role="dialog" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title">Datos Nuevos (Log ID: <?= $log['id'] ?>)</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
                                                     </div>
-                                                    <div class="modal-body">
+                                                    <div class="modal-body pre-scrollable" style="max-height:70vh;overflow:auto;">
                                                         <pre><code><?= htmlspecialchars(json_encode(json_decode($log['datos_nuevos']), JSON_PRETTY_PRINT)) ?></code></pre>
                                                     </div>
                                                 </div>

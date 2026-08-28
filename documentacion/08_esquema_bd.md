@@ -126,6 +126,18 @@ Seed: `Juan Perez`, matrícula `123456`, DNI `12345678`.
 | `logo` | VARCHAR(500) | ruta relativa del PNG (fuera del root) |
 | `created_at` / `updated_at` | TIMESTAMP | |
 
+### `boletines_oficiales`
+| Campo | Tipo | Notas |
+| :-- | :-- | :-- |
+| `id` | SERIAL PK | |
+| `titulo` | VARCHAR(200) | |
+| `resumen` | TEXT | |
+| `archivo_nombre` | VARCHAR(255) | adjunto PDF: nombre original |
+| `archivo_ruta` | VARCHAR(500) | adjunto PDF: ruta relativa (fuera del root) |
+| `archivo_tipo` | VARCHAR(100) | adjunto PDF: MIME |
+| `archivo_tamano` | BIGINT | adjunto PDF: tamaño en bytes |
+| `created_at` / `updated_at` | TIMESTAMP | |
+
 ### `novedades`
 | Campo | Tipo | Notas |
 | :-- | :-- | :-- |
@@ -173,7 +185,7 @@ CREATE INDEX idx_auditoria_logs_tabla        ON auditoria_logs (tabla_afectada);
 
 ## Estado real de la BD (verificado)
 
-Tablas existentes en `cpee` (2026-08): `auditoria_logs`, `caja_movimientos`, `novedad_roles`, `novedades`, `obras_sociales`, `permisos`, `profesionales`, `rol_permisos`, `roles`, `sectores`, `usuario_roles`, `usuarios`.
+Tablas existentes en `cpee` (2026-08): `auditoria_logs`, `boletines_oficiales`, `caja_movimientos`, `novedad_roles`, `novedades`, `obras_sociales`, `permisos`, `profesionales`, `rol_permisos`, `roles`, `sectores`, `usuario_roles`, `usuarios`.
 
 ### Verificación de tipos
 
@@ -245,3 +257,21 @@ CREATE TABLE IF NOT EXISTS obras_sociales (
 ```
 
 > Módulo de Obra Social (CRUD). El campo `logo` guarda la ruta relativa de un **PNG** (p. ej. `uploads/logos/<hex>.png`), almacenado fuera del Document Root y servido por controlador (`/cpee/obras-sociales/logo/{id}`). `database/schema.sql` ya crea esta tabla.
+
+### Tabla `boletines_oficiales`
+
+```sql
+CREATE TABLE IF NOT EXISTS boletines_oficiales (
+    id             SERIAL PRIMARY KEY,
+    titulo         VARCHAR(200) NOT NULL,
+    resumen        TEXT,
+    archivo_nombre VARCHAR(255),
+    archivo_ruta   VARCHAR(500),
+    archivo_tipo   VARCHAR(100),
+    archivo_tamano BIGINT,
+    created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+> Módulo de **Boletín Oficial** (CRUD). Cada boletín posee título, resumen y un **PDF** adjunto guardado en `uploads/boletin/` (fuera del Document Root) y servido por controlador (`/cpee/boletin-oficial/descargar/{id}`). `database/schema.sql` ya crea esta tabla.

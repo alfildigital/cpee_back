@@ -45,12 +45,6 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/cpee/usuarios">
-                    <i class="fas fa-fw fa-user-cog"></i>
-                    <span>Usuarios</span>
-                </a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="/cpee/novedades">
                     <i class="fas fa-fw fa-exclamation-circle"></i>
                     <span>Novedades</span>
@@ -62,8 +56,20 @@
                     <span>Obras Sociales</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/cpee/boletin-oficial">
+                    <i class="fas fa-fw fa-file-alt"></i>
+                    <span>Boletín Oficial</span>
+                </a>
+            </li>
             <hr class="sidebar-divider">
             <div class="sidebar-heading">Sistema</div>
+            <li class="nav-item">
+                <a class="nav-link" href="/cpee/usuarios">
+                    <i class="fas fa-fw fa-user-cog"></i>
+                    <span>Usuarios</span>
+                </a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="/cpee/roles">
                     <i class="fas fa-fw fa-user-shield"></i>

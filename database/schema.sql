@@ -216,6 +216,18 @@ CREATE TABLE obras_sociales (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE boletines_oficiales (
+    id SERIAL PRIMARY KEY,
+    titulo VARCHAR(200) NOT NULL,
+    resumen TEXT,
+    archivo_nombre VARCHAR(255),
+    archivo_ruta VARCHAR(500),
+    archivo_tipo VARCHAR(100),
+    archivo_tamano BIGINT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE novedades (
     id SERIAL PRIMARY KEY,
     usuario_id INT REFERENCES usuarios (id) ON DELETE SET NULL,

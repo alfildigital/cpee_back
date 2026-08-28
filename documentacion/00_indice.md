@@ -36,6 +36,7 @@ Sistema administrativo web para la gestión de **C**olegios de **P**rofesionales
 ├── obras-sociales   → CRUD de obras sociales (con logo PNG)
 ├── usuarios         → CRUD de usuarios del sistema
 ├── roles            → CRUD de roles + asignación de permisos (catálogo)
+├── boletin-oficial  → CRUD de boletines oficiales (con PDF adjunto)
 ├── auditoria        → Visualización de logs de auditoría
 └── api/novedades    → Endpoint JSON público de novedades (para frontend externo)
 ```
