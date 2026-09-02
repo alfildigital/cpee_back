@@ -69,6 +69,7 @@ class UsuariosController extends BaseController
         try {
             $datosLimpios = Security::sanitizeInput($_POST);
             $rolesUsuario = array_map(static fn($r) => (int)$r, (array)($_POST['roles'] ?? []));
+            $datosLimpios['usuario_abm'] = $this->getCurrentUserAmb();
 
             if (empty($datosLimpios['nombre']) || empty($datosLimpios['email']) || empty($datosLimpios['password'])) {
                 throw new Exception("Nombre, Email y Password son obligatorios");
@@ -138,6 +139,7 @@ class UsuariosController extends BaseController
             }
 
             $datosLimpios['activo'] = isset($_POST['activo']) ? 1 : 0;
+            $datosLimpios['usuario_abm'] = $this->getCurrentUserAmb();
 
             if (empty($_POST['password'])) {
                 unset($datosLimpios['password']);

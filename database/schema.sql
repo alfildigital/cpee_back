@@ -7,7 +7,10 @@ CREATE TYPE rol_usuario AS ENUM ('Admin', 'Tesoreria', 'Mesa de Entradas', 'Dire
 CREATE TABLE roles (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(50) UNIQUE NOT NULL,
-    descripcion TEXT
+    descripcion TEXT,
+    usuario_abm VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 INSERT INTO
@@ -41,7 +44,10 @@ VALUES (
 CREATE TABLE permisos (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) UNIQUE NOT NULL,
-    descripcion TEXT
+    descripcion TEXT,
+    usuario_abm VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 INSERT INTO
@@ -75,6 +81,9 @@ VALUES (
 CREATE TABLE rol_permisos (
     rol_id INT REFERENCES roles (id) ON DELETE CASCADE,
     permiso_id INT REFERENCES permisos (id) ON DELETE CASCADE,
+    usuario_abm VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (rol_id, permiso_id)
 );
 
@@ -89,7 +98,10 @@ INSERT INTO rol_permisos (rol_id, permiso_id) VALUES (1, 4);
 CREATE TABLE sectores (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) UNIQUE NOT NULL,
-    descripcion TEXT
+    descripcion TEXT,
+    usuario_abm VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 INSERT INTO
@@ -113,6 +125,7 @@ CREATE TABLE usuarios (
     email VARCHAR(150) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     activo BOOLEAN DEFAULT TRUE,
+    usuario_abm VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -136,6 +149,9 @@ VALUES (
 CREATE TABLE usuario_roles (
     usuario_id INT REFERENCES usuarios (id) ON DELETE CASCADE,
     rol_id INT REFERENCES roles (id) ON DELETE CASCADE,
+    usuario_abm VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (usuario_id, rol_id)
 );
 
@@ -153,8 +169,9 @@ CREATE TABLE profesionales (
     direccion VARCHAR(200),
     estado estado_matricula DEFAULT 'Activa',
     fecha_matriculacion DATE NOT NULL,
-    legajo TEXT,
+    observaciones TEXT,
     foto VARCHAR(500),
+    usuario_abm VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -169,7 +186,7 @@ INSERT INTO
         telefono,
         estado,
         fecha_matriculacion,
-        legajo
+        observaciones
     )
 VALUES (
         '123456',
@@ -197,11 +214,13 @@ CREATE TABLE caja_movimientos (
     iva NUMERIC(12, 2) DEFAULT 0,
     monto_total NUMERIC(12, 2) NOT NULL,
     fecha_movimiento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     archivo_nombre VARCHAR(255),
     archivo_ruta VARCHAR(500),
     archivo_tipo VARCHAR(100),
-    archivo_tamano BIGINT
+    archivo_tamano BIGINT,
+    usuario_abm VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE obras_sociales (
@@ -212,6 +231,7 @@ CREATE TABLE obras_sociales (
     correo VARCHAR(150),
     url_sitio_web VARCHAR(255),
     logo VARCHAR(500),
+    usuario_abm VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -224,6 +244,7 @@ CREATE TABLE boletines_oficiales (
     archivo_ruta VARCHAR(500),
     archivo_tipo VARCHAR(100),
     archivo_tamano BIGINT,
+    usuario_abm VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -238,12 +259,18 @@ CREATE TABLE novedades (
     archivo_nombre VARCHAR(255),
     archivo_ruta VARCHAR(500),
     archivo_tipo VARCHAR(100),
-    archivo_tamano BIGINT
+    archivo_tamano BIGINT,
+    usuario_abm VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE novedad_roles (
     novedad_id INT REFERENCES novedades (id) ON DELETE CASCADE,
     rol_id INT REFERENCES roles (id) ON DELETE CASCADE,
+    usuario_abm VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (novedad_id, rol_id)
 );
 
@@ -257,7 +284,10 @@ CREATE TABLE auditoria_logs (
     datos_nuevos JSONB,
     ip_origen VARCHAR(45),
     user_agent TEXT,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    usuario_abm VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Indexes for performance

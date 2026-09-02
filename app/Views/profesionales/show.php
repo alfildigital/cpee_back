@@ -29,7 +29,7 @@
                 <?php if (!empty($profesional['foto'])): ?>
                     <div class="text-center mb-4">
                         <img src="/cpee/profesionales/foto/<?= (int)$profesional['id'] ?>"
-                             alt="Foto del matriculado" class="img-thumbnail" style="max-height:180px">
+                            alt="Foto del matriculado" class="img-thumbnail" style="max-height:180px">
                     </div>
                 <?php endif; ?>
                 <div class="form-group row">
@@ -91,15 +91,27 @@
             </div>
             <div class="card-body">
                 <div class="form-group mb-4">
-                    <label class="text-muted small font-weight-bold d-block">Notas / Legajo</label>
+                    <label class="text-muted small font-weight-bold d-block">Observaciones</label>
                     <div class="border rounded p-3 bg-light">
-                        <?= htmlspecialchars($profesional['legajo'] ?? 'Sin notas registradas.') ?>
+                        <?= htmlspecialchars($profesional['observaciones'] ?? '—') ?>
+                    </div>
+                </div>
+                <div class="form-group row mb-2">
+                    <label class="col-sm-4 col-form-label text-muted small font-weight-bold">Registrado por</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext"><?= htmlspecialchars($profesional['usuario_abm'] ?? '—') ?></p>
                     </div>
                 </div>
                 <div class="form-group row mb-2">
                     <label class="col-sm-4 col-form-label text-muted small font-weight-bold">Registrado el</label>
                     <div class="col-sm-8">
                         <p class="form-control-plaintext"><?= htmlspecialchars($profesional['created_at'] ?? '') ?></p>
+                    </div>
+                </div>
+                <div class="form-group row mb-2">
+                    <label class="col-sm-4 col-form-label text-muted small font-weight-bold">Actualizado por</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext"><?= htmlspecialchars($profesional['usuario_abm'] ?? '—') ?></p>
                     </div>
                 </div>
                 <div class="form-group row mb-2">

@@ -87,8 +87,8 @@
             </div>
 
             <div class="mb-3 text-start">
-                <label for="legajo" class="form-label">Notas Adicionales (Legajo)</label>
-                <textarea class="form-control" id="legajo" name="legajo" rows="3"><?= htmlspecialchars($profesional['legajo']) ?></textarea>
+                <label for="observaciones" class="form-label">Observaciones Adicionales</label>
+                <textarea class="form-control" id="observaciones" name="observaciones" rows="3"><?= htmlspecialchars($profesional['observaciones']) ?></textarea>
             </div>
 
             <div class="mb-3 text-start">
@@ -97,10 +97,10 @@
                     <div class="mr-3">
                         <?php if (!empty($profesional['foto'])): ?>
                             <img src="/cpee/profesionales/foto/<?= (int)$profesional['id'] ?>"
-                                 alt="Foto actual" class="img-thumbnail" style="max-height:120px">
+                                alt="Foto actual" class="img-thumbnail" style="max-height:120px">
                         <?php else: ?>
                             <div class="border rounded d-flex align-items-center justify-content-center text-muted"
-                                 style="width:100px;height:120px">Sin foto</div>
+                                style="width:100px;height:120px">Sin foto</div>
                         <?php endif; ?>
                         <div class="mt-2 d-none" id="foto_preview_wrap">
                             <img id="foto_preview" alt="Nueva foto" class="img-thumbnail" style="max-height:120px">
@@ -108,7 +108,7 @@
                     </div>
                     <div>
                         <input type="file" class="form-control" id="foto" name="foto" accept="image/*"
-                               onchange="cpeeFotoPreview(this)">
+                            onchange="cpeeFotoPreview(this)">
                         <div class="form-text text-muted">Formatos: JPG, PNG, WEBP o GIF. Máx. 2 MB. Dejar vacío para conservar la actual.</div>
                         <?php if (!empty($profesional['foto'])): ?>
                             <div class="form-check mt-2">
@@ -155,7 +155,9 @@
             return;
         }
         const cb = document.getElementById('remover_foto');
-        if (cb) { cb.checked = false; }
+        if (cb) {
+            cb.checked = false;
+        }
         img.src = URL.createObjectURL(f);
         wrap.classList.remove('d-none');
     }

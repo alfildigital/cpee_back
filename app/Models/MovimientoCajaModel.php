@@ -25,8 +25,8 @@ class MovimientoCajaModel
 
             $stmt = $this->db->prepare("
                 INSERT INTO caja_movimientos 
-                (usuario_id, profesional_id, tipo, concepto, tipo_comprobante, punto_venta, nro_comprobante, cuit, monto_neto, iva, monto_total, archivo_nombre, archivo_ruta, archivo_tipo, archivo_tamano)
-                VALUES (:usuario_id, :profesional_id, :tipo, :concepto, :tipo_comprobante, :punto_venta, :nro_comprobante, :cuit, :monto_neto, :iva, :monto_total, :archivo_nombre, :archivo_ruta, :archivo_tipo, :archivo_tamano)
+                (usuario_id, profesional_id, tipo, concepto, tipo_comprobante, punto_venta, nro_comprobante, cuit, monto_neto, iva, monto_total, archivo_nombre, archivo_ruta, archivo_tipo, archivo_tamano, usuario_abm)
+                VALUES (:usuario_id, :profesional_id, :tipo, :concepto, :tipo_comprobante, :punto_venta, :nro_comprobante, :cuit, :monto_neto, :iva, :monto_total, :archivo_nombre, :archivo_ruta, :archivo_tipo, :archivo_tamano, :usuario_abm)
                 RETURNING id
             ");
 
@@ -45,7 +45,8 @@ class MovimientoCajaModel
                 ':archivo_nombre' => $datos['archivo_nombre'] ?? null,
                 ':archivo_ruta' => $datos['archivo_ruta'] ?? null,
                 ':archivo_tipo' => $datos['archivo_tipo'] ?? null,
-                ':archivo_tamano' => $datos['archivo_tamano'] ?? null
+                ':archivo_tamano' => $datos['archivo_tamano'] ?? null,
+                ':usuario_abm' => $datos['usuario_abm'] ?? null
             ]);
 
             $id = $stmt->fetchColumn();

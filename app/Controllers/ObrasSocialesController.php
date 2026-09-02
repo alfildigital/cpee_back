@@ -75,6 +75,7 @@ class ObrasSocialesController extends BaseController
             // Logo opcional (solo PNG)
             $logo = Upload::store($_FILES['logo'] ?? [], 'logos', self::LOGO_MIME);
             $datosLimpios['logo'] = $logo['ruta'] ?? null;
+            $datosLimpios['usuario_abm'] = $this->getCurrentUserAmb();
 
             $model = new ObraSocialModel();
             $id = $model->create($datosLimpios);
@@ -159,6 +160,8 @@ class ObrasSocialesController extends BaseController
             } else {
                 $datosLimpios['logo'] = $datosAnteriores['logo'] ?? null;
             }
+
+            $datosLimpios['usuario_abm'] = $this->getCurrentUserAmb();
 
             $model->update($id, $datosLimpios);
 

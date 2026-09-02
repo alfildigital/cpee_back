@@ -1,0 +1,80 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controllers\Api;
+
+use App\Models\ObraSocialModel;
+
+class ObrasSocialesController extends ApiController
+{
+    private const LIMIT_MAX = 100;
+    private const LIMIT_DEFAULT = 50;
+
+    private function model(): ObraSocialModel
+    {
+        return new ObraSocialModel();
+    }
+
+    private function map(array $row): array
+    {
+        return [
+            'id' => (int)$row['id'],
+            'nombre' => $row['nombre'],
+            'descripcion' => $row['descripcion'] ?? null,
+            'telefono' => $row['telefono'] ?? null,
+            'correo' => $row['correo'] ?? null,
+            'url_sitio_web' => $row['url_sitio_web'] ?? null,
+            'usuario_abm' => $row['usuario_abm'] ?? null,
+            'created_at' => $row['created_at'],
+            'updated_at' => $row['updated_at'],
+        ];
+    }
+
+    // ------------------------------------------------------------------
+    // GET /api/v1/obras-sociales?page=1&limit=50&q=...
+    // ------------------------------------------------------------------
+    public function index(): void
+    {
+        $this->requireAuth();
+
+        $page = max(1, (int)($_GET['page'] ?? 1));
+        $limit = min(self::LIMIT_MAX, max(1, (int)($_GET['limit'] ?? self::LIMIT_DEFAULT)));
+
+        $q = trim((string)($_GET['q'] ?? ''));
+        $q = $q === '' ? null : $q;
+
+        $offset = ($page - 1) * $limit;
+
+        $model = $this->model();
+        $items = array_map([$this, 'map'], $model->getPaginated($limit, $offset, $q));
+        $total = $model->count($q);
+
+        $this->success($items, 200, '', [
+            'page' => $page,
+            'limit' => $limit,
+            'total' => $total,
+            'pages' => (int)ceil($total / $limit),
+        ]);
+    }
+
+    // ------------------------------------------------------------------
+    // GET /api/v1/obras-sociales/{id}
+    // ------------------------------------------------------------------
+    public function show(int $id): void
+    {
+        $this->requireAuth();
+
+        if ($id <= 0) {
+            $this->error('ID inválido.', 400);
+        }
+
+        $row = $this->model()->getById($id);
+
+        if ($row === null) {
+            $this->error('Obra social no encontrada.', 404);
+        }
+
+        $this->success($this->map($row));
+    }
+}

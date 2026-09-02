@@ -93,6 +93,7 @@
                         <th>Total</th>
                         <th>Adjunto</th>
                         <th>Usuario Op.</th>
+                        <th>Registrado el</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -128,11 +129,12 @@
                                     <?php endif; ?>
                                 </td>
                                 <td><?= htmlspecialchars($m['usuario'] ?? 'Sistema') ?></td>
+                                <td><?= htmlspecialchars($m['usuario_abm'] ?? '—') ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="9" class="text-center">No hay movimientos en este periodo.</td>
+                            <td colspan="10" class="text-center">No hay movimientos en este periodo.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>

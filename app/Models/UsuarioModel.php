@@ -105,8 +105,8 @@ class UsuarioModel
             $this->db->beginTransaction();
 
             $stmt = $this->db->prepare("
-                INSERT INTO usuarios (sector_id, nombre, email, password_hash, activo)
-                VALUES (:sector_id, :nombre, :email, :password_hash, :activo)
+                INSERT INTO usuarios (sector_id, nombre, email, password_hash, activo, usuario_abm)
+                VALUES (:sector_id, :nombre, :email, :password_hash, :activo, :usuario_abm)
                 RETURNING id
             ");
             $stmt->execute([
@@ -114,7 +114,8 @@ class UsuarioModel
                 ':nombre' => $data['nombre'],
                 ':email' => $data['email'],
                 ':password_hash' => password_hash($data['password'], PASSWORD_ARGON2ID),
-                ':activo' => $data['activo'] ?? true
+                ':activo' => $data['activo'] ?? true,
+                ':usuario_abm' => $data['usuario_abm'] ?? null
             ]);
 
             $id = (int)$stmt->fetchColumn();
@@ -140,13 +141,14 @@ class UsuarioModel
         try {
             $this->db->beginTransaction();
 
-            $query = "UPDATE usuarios SET sector_id = :sector_id, nombre = :nombre, email = :email, activo = :activo, updated_at = CURRENT_TIMESTAMP";
+            $query = "UPDATE usuarios SET sector_id = :sector_id, nombre = :nombre, email = :email, activo = :activo, usuario_abm = :usuario_abm, updated_at = CURRENT_TIMESTAMP";
             $params = [
                 ':id' => $id,
                 ':sector_id' => $data['sector_id'] ?? null,
                 ':nombre' => $data['nombre'],
                 ':email' => $data['email'],
-                ':activo' => $data['activo']
+                ':activo' => $data['activo'],
+                ':usuario_abm' => $data['usuario_abm'] ?? null
             ];
 
             if (!empty($data['password'])) {

@@ -79,6 +79,12 @@
 
                 <hr>
                 <div class="form-group row mb-0">
+                    <label class="col-sm-4 col-form-label text-muted small font-weight-bold">Registrado por</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext"><?= htmlspecialchars($usuario['usuario_abm'] ?? '—') ?></p>
+                    </div>
+                </div>
+                <div class="form-group row mb-0">
                     <label class="col-sm-4 col-form-label text-muted small font-weight-bold">Registrado el</label>
                     <div class="col-sm-8">
                         <p class="form-control-plaintext"><?= htmlspecialchars($usuario['created_at'] ?? '') ?></p>

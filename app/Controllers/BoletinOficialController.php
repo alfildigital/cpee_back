@@ -6,62 +6,56 @@ namespace App\Controllers;
 
 use App\Core\Security;
 use App\Core\Upload;
-use App\Models\NovedadModel;
+use App\Models\BoletinOficialModel;
 use Exception;
 
-class NovedadesController extends BaseController
+class BoletinOficialController extends BaseController
 {
-    // GET /novedades
+    // GET /boletin-oficial
     public function index(): void
     {
         $this->requireLogin();
-        $model = new NovedadModel();
-        $novedades = $model->getAll();
-        $this->render('novedades/index', 'Novedades - CPEE', [
-            'novedades' => $novedades,
+        $model = new BoletinOficialModel();
+        $boletines = $model->getAll();
+
+        $this->render('boletin_oficial/index', 'Boletín Oficial - CPEE', [
+            'boletines' => $boletines,
             'csrf_token' => Security::generateCSRFToken()
         ]);
     }
 
-    // GET /novedades/ver/{id}
+    // GET /boletin-oficial/ver/{id}
     public function ver(?string $id = null): void
     {
         $this->requireLogin();
 
         $id = (int)($id ?? 0);
         if ($id <= 0) {
-            Security::flash('danger', 'ID de novedad no provisto.');
-            $this->redirect('/cpee/novedades');
+            Security::flash('danger', 'ID de boletín no provisto.');
+            $this->redirect('/cpee/boletin-oficial');
         }
 
-        $model = new NovedadModel();
-        $novedad = $model->getById($id);
+        $model = new BoletinOficialModel();
+        $boletin = $model->getById($id);
 
-        if (!$novedad) {
-            Security::flash('danger', 'Novedad no encontrada.');
-            $this->redirect('/cpee/novedades');
+        if (!$boletin) {
+            Security::flash('danger', 'Boletín no encontrado.');
+            $this->redirect('/cpee/boletin-oficial');
         }
 
-        $this->render('novedades/show', 'Detalle de Novedad - CPEE', [
-            'novedad' => $novedad,
-            'roles' => $model->getAllRoles(),
-            'csrf_token' => Security::generateCSRFToken()
-        ]);
+        $this->render('boletin_oficial/show', 'Detalle de Boletín - CPEE', ['boletin' => $boletin]);
     }
 
-    // GET /novedades/crear
+    // GET /boletin-oficial/crear
     public function crear(): void
     {
         $this->requireLogin();
-        $model = new NovedadModel();
-        $roles = $model->getAllRoles();
-        $this->render('novedades/create', 'Nueva Novedad - CPEE', [
-            'roles' => $roles,
+        $this->render('boletin_oficial/create', 'Nuevo Boletín - CPEE', [
             'csrf_token' => Security::generateCSRFToken()
         ]);
     }
 
-    // POST /novedades/guardar
+    // POST /boletin-oficial/guardar
     public function guardar(): void
     {
         $this->requireLogin();
@@ -70,60 +64,58 @@ class NovedadesController extends BaseController
 
         try {
             $datosLimpios = Security::sanitizeInput($_POST);
-            $rolesNovedad = array_map(static fn($r) => (int)$r, (array)($_POST['roles'] ?? []));
 
-            if (empty($datosLimpios['titulo']) || empty($datosLimpios['contenido'])) {
-                throw new Exception("Título y Contenido son obligatorios");
+            if (empty($datosLimpios['titulo'])) {
+                throw new Exception("El título del boletín es obligatorio");
             }
 
-            $model = new NovedadModel();
-            $archivo = Upload::store($_FILES['archivo'] ?? [], 'novedades');
-            $id = $model->create($this->datosParaGuardar($datosLimpios, $archivo), $rolesNovedad);
+            $model = new BoletinOficialModel();
+            $archivo = Upload::store($_FILES['archivo'] ?? [], 'boletin');
+            $id = $model->create($this->datosParaGuardar($datosLimpios, $archivo));
 
             Security::logAudit(
                 $this->getCurrentUserId(),
                 'INSERT',
-                'novedades',
+                'boletines_oficiales',
                 $id,
                 null,
                 $datosLimpios
             );
 
-            Security::flash('success', 'Novedad creada correctamente.');
-            $this->redirect('/cpee/novedades');
+            Security::flash('success', 'Boletín creado correctamente.');
+            $this->redirect('/cpee/boletin-oficial');
         } catch (Exception $e) {
             Security::flash('danger', $e->getMessage());
-            $this->redirect('/cpee/novedades/crear');
+            $this->redirect('/cpee/boletin-oficial/crear');
         }
     }
 
-    // GET /novedades/editar/{id}
+    // GET /boletin-oficial/editar/{id}
     public function editar(?string $id = null): void
     {
         $this->requireLogin();
 
         $id = (int)($id ?? 0);
         if ($id <= 0) {
-            Security::flash('danger', 'ID de novedad no provisto.');
-            $this->redirect('/cpee/novedades');
+            Security::flash('danger', 'ID de boletín no provisto.');
+            $this->redirect('/cpee/boletin-oficial');
         }
 
-        $model = new NovedadModel();
-        $novedad = $model->getById($id);
+        $model = new BoletinOficialModel();
+        $boletin = $model->getById($id);
 
-        if (!$novedad) {
-            Security::flash('danger', 'Novedad no encontrada.');
-            $this->redirect('/cpee/novedades');
+        if (!$boletin) {
+            Security::flash('danger', 'Boletín no encontrado.');
+            $this->redirect('/cpee/boletin-oficial');
         }
 
-        $this->render('novedades/edit', 'Editar Novedad - CPEE', [
-            'novedad' => $novedad,
-            'roles' => $model->getAllRoles(),
+        $this->render('boletin_oficial/edit', 'Editar Boletín - CPEE', [
+            'boletin' => $boletin,
             'csrf_token' => Security::generateCSRFToken()
         ]);
     }
 
-    // POST /novedades/actualizar
+    // POST /boletin-oficial/actualizar
     public function actualizar(): void
     {
         $this->requireLogin();
@@ -133,20 +125,19 @@ class NovedadesController extends BaseController
         try {
             $datosLimpios = Security::sanitizeInput($_POST);
             $id = (int)($datosLimpios['id'] ?? 0);
-            $rolesNovedad = array_map(static fn($r) => (int)$r, (array)($_POST['roles'] ?? []));
 
-            if ($id <= 0 || empty($datosLimpios['titulo']) || empty($datosLimpios['contenido'])) {
-                throw new Exception("Título y Contenido son obligatorios");
+            if ($id <= 0 || empty($datosLimpios['titulo'])) {
+                throw new Exception("El título del boletín es obligatorio");
             }
 
-            $model = new NovedadModel();
+            $model = new BoletinOficialModel();
             $datosAnteriores = $model->getById($id);
             if (!$datosAnteriores) {
-                throw new Exception("Novedad no encontrada");
+                throw new Exception("Boletín no encontrado");
             }
 
             // PDF adjunto: nuevo / quitar / conservar
-            $nuevaArchivo = Upload::store($_FILES['archivo'] ?? [], 'novedades');
+            $nuevaArchivo = Upload::store($_FILES['archivo'] ?? [], 'boletin');
             $removerArchivo = isset($_POST['remover_archivo']) && $_POST['remover_archivo'] === '1';
 
             if ($nuevaArchivo) {
@@ -168,27 +159,27 @@ class NovedadesController extends BaseController
                 ];
             }
 
-            $model->update($id, $this->datosParaGuardar($datosLimpios, $archivo), $rolesNovedad);
+            $model->update($id, $this->datosParaGuardar($datosLimpios, $archivo));
 
             Security::logAudit(
                 $this->getCurrentUserId(),
                 'UPDATE',
-                'novedades',
+                'boletines_oficiales',
                 $id,
                 $datosAnteriores,
                 $datosLimpios
             );
 
-            Security::flash('success', 'Novedad actualizada correctamente.');
-            $this->redirect('/cpee/novedades');
+            Security::flash('success', 'Boletín actualizado correctamente.');
+            $this->redirect('/cpee/boletin-oficial');
         } catch (Exception $e) {
             Security::flash('danger', $e->getMessage());
             $id = (int)($_POST['id'] ?? 0);
-            $this->redirect('/cpee/novedades/editar/' . $id);
+            $this->redirect('/cpee/boletin-oficial/editar/' . $id);
         }
     }
 
-    // POST /novedades/eliminar
+    // POST /boletin-oficial/eliminar
     public function eliminar(): void
     {
         $this->requireLogin();
@@ -198,13 +189,13 @@ class NovedadesController extends BaseController
         try {
             $id = (int)($_POST['id'] ?? 0);
             if ($id <= 0) {
-                throw new Exception("ID de novedad inválido");
+                throw new Exception("ID de boletín inválido");
             }
 
-            $model = new NovedadModel();
+            $model = new BoletinOficialModel();
             $datosAnteriores = $model->getById($id);
             if (!$datosAnteriores) {
-                throw new Exception("Novedad no encontrada");
+                throw new Exception("Boletín no encontrado");
             }
 
             if (!empty($datosAnteriores['archivo_ruta'])) {
@@ -216,34 +207,27 @@ class NovedadesController extends BaseController
             Security::logAudit(
                 $this->getCurrentUserId(),
                 'DELETE',
-                'novedades',
+                'boletines_oficiales',
                 $id,
                 $datosAnteriores,
                 null
             );
 
-            Security::flash('success', 'Novedad eliminada correctamente.');
-            $this->redirect('/cpee/novedades');
+            Security::flash('success', 'Boletín eliminado correctamente.');
+            $this->redirect('/cpee/boletin-oficial');
         } catch (Exception $e) {
             Security::flash('danger', $e->getMessage());
-            $this->redirect('/cpee/novedades');
+            $this->redirect('/cpee/boletin-oficial');
         }
     }
 
-    /** Prepara conjunto de datos para create()/update() del modelo. */
+    /** Prepara el conjunto de datos para create()/update() del modelo. */
     private function datosParaGuardar(array $datosLimpios, ?array $archivo = null): array
     {
-        $fecha = isset($datosLimpios['fecha_publicacion']) && trim((string)$datosLimpios['fecha_publicacion']) !== ''
-            ? $datosLimpios['fecha_publicacion']
-            : date('Y-m-d H:i:s');
-
         $data = [
-            'usuario_id' => $this->getCurrentUserId(),
-            'usuario_abm' => $this->getCurrentUserAmb(),
             'titulo' => trim((string)$datosLimpios['titulo']),
-            'contenido' => trim((string)$datosLimpios['contenido']),
-            'publicado' => isset($_POST['publicado']),
-            'fecha_publicacion' => $fecha,
+            'resumen' => trim((string)($datosLimpios['resumen'] ?? '')),
+            'usuario_abm' => $this->getCurrentUserAmb(),
         ];
 
         if ($archivo !== null) {
@@ -256,35 +240,35 @@ class NovedadesController extends BaseController
         return $data;
     }
 
-    // GET /novedades/descargar/{id}   -> sirve el PDF adjunto (con sesión)
+    // GET /boletin-oficial/descargar/{id}   -> sirve el PDF adjunto (con sesión)
     public function descargar(?string $id = null): void
     {
         $this->requireLogin();
 
         $id = (int)($id ?? 0);
         if ($id <= 0) {
-            $this->redirect('/cpee/novedades');
+            $this->redirect('/cpee/boletin-oficial');
         }
 
-        $model = new NovedadModel();
-        $novedad = $model->getById($id);
+        $model = new BoletinOficialModel();
+        $boletin = $model->getById($id);
 
-        if (!$novedad || empty($novedad['archivo_ruta'])) {
-            Security::flash('danger', 'La novedad no posee documento adjunto.');
-            $this->redirect('/cpee/novedades');
+        if (!$boletin || empty($boletin['archivo_ruta'])) {
+            Security::flash('danger', 'El boletín no posee documento adjunto.');
+            $this->redirect('/cpee/boletin-oficial');
         }
 
-        $rutaAbsoluta = ROOT_PATH . '/' . $novedad['archivo_ruta'];
+        $rutaAbsoluta = ROOT_PATH . '/' . $boletin['archivo_ruta'];
         if (!is_file($rutaAbsoluta)) {
             Security::flash('danger', 'El archivo adjunto no existe en el servidor.');
-            $this->redirect('/cpee/novedades');
+            $this->redirect('/cpee/boletin-oficial');
         }
 
-        $nombreDescarga = !empty($novedad['archivo_nombre'])
-            ? $novedad['archivo_nombre']
-            : basename($novedad['archivo_ruta']);
+        $nombreDescarga = !empty($boletin['archivo_nombre'])
+            ? $boletin['archivo_nombre']
+            : basename($boletin['archivo_ruta']);
 
-        header('Content-Type: ' . ($novedad['archivo_tipo'] ?: 'application/octet-stream'));
+        header('Content-Type: ' . ($boletin['archivo_tipo'] ?: 'application/octet-stream'));
         header('Content-Disposition: inline; filename="' . basename($nombreDescarga) . '"');
         header('Content-Length: ' . (string)@filesize($rutaAbsoluta));
         readfile($rutaAbsoluta);

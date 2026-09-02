@@ -232,6 +232,7 @@ class RolesController extends BaseController
             $id = $model->createPermiso([
                 'nombre' => trim((string)$datosLimpios['nombre']),
                 'descripcion' => isset($datosLimpios['descripcion']) ? trim((string)$datosLimpios['descripcion']) : null,
+                'usuario_abm' => $this->getCurrentUserAmb(),
             ]);
 
             Security::logAudit($this->getCurrentUserId(), 'INSERT', 'permisos', $id, null, $datosLimpios);
@@ -266,6 +267,7 @@ class RolesController extends BaseController
             $model->updatePermiso($id, [
                 'nombre' => trim((string)$datosLimpios['nombre']),
                 'descripcion' => isset($datosLimpios['descripcion']) ? trim((string)$datosLimpios['descripcion']) : null,
+                'usuario_abm' => $this->getCurrentUserAmb(),
             ]);
 
             Security::logAudit($this->getCurrentUserId(), 'UPDATE', 'permisos', $id, $datosAnteriores, $datosLimpios);
@@ -311,6 +313,7 @@ class RolesController extends BaseController
         return [
             'nombre' => trim((string)$datosLimpios['nombre']),
             'descripcion' => isset($datosLimpios['descripcion']) ? trim((string)$datosLimpios['descripcion']) : null,
+            'usuario_abm' => $this->getCurrentUserAmb(),
         ];
     }
 }

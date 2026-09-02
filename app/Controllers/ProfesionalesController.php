@@ -73,6 +73,7 @@ class ProfesionalesController extends BaseController
             // Foto opcional
             $foto = Upload::storeImage($_FILES['foto'] ?? []);
             $datosLimpios['foto'] = $foto['ruta'] ?? null;
+            $datosLimpios['usuario_abm'] = $this->getCurrentUserAmb();
 
             $model = new ProfesionalModel();
             $id = $model->create($datosLimpios);
@@ -158,6 +159,8 @@ class ProfesionalesController extends BaseController
             } else {
                 $datosLimpios['foto'] = $datosAnteriores['foto'] ?? null;
             }
+
+            $datosLimpios['usuario_abm'] = $this->getCurrentUserAmb();
 
             $model->update($id, $datosLimpios);
 

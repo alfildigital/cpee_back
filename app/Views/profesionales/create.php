@@ -29,11 +29,11 @@
             <div class="row mb-3">
                 <div class="col-md-6 text-start">
                     <label for="nro_matricula" class="form-label">Nro. Matrícula *</label>
-                    <input type="text" class="form-control" id="nro_matricula" name="nro_matricula" required>
+                    <input type="text" maxlength="6" class="form-control" id="nro_matricula" name="nro_matricula" required>
                 </div>
                 <div class="col-md-6 text-start">
-                    <label for="DNI" class="form-label">DNI *</label>
-                    <input type="text" class="form-control" id="DNI" name="DNI" required pattern="\d{7,8}">
+                    <label for="DNI" class="form-label">DNI * <small></small>(sin puntos)</label>
+                    <input type="text" maxlength="8" class="form-control" id="DNI" name="DNI" required pattern="\d{7,8}">
                 </div>
             </div>
 
@@ -86,14 +86,14 @@
             </div>
 
             <div class="mb-3 text-start">
-                <label for="legajo" class="form-label">Notas Adicionales (Legajo)</label>
-                <textarea class="form-control" id="legajo" name="legajo" rows="3"></textarea>
+                <label for="observaciones" class="form-label">Observaciones Adicionales</label>
+                <textarea class="form-control" id="observaciones" name="observaciones" rows="3"></textarea>
             </div>
 
             <div class="mb-3 text-start">
                 <label for="foto" class="form-label">Foto (para el carnet)</label>
                 <input type="file" class="form-control" id="foto" name="foto" accept="image/*"
-                       onchange="cpeeFotoPreview(this)">
+                    onchange="cpeeFotoPreview(this)">
                 <div class="form-text text-muted">Formatos: JPG, PNG, WEBP o GIF. Máx. 2 MB. Opcional.</div>
                 <div class="mt-2 d-none" id="foto_preview_wrap">
                     <img id="foto_preview" alt="Vista previa" class="img-thumbnail" style="max-height:150px;">

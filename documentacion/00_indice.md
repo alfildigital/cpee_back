@@ -20,7 +20,9 @@ Sistema administrativo web para la gestión de **C**olegios de **P**rofesionales
 | 07 | `07_auditoria.md` | Módulo de auditoría forense y trazabilidad. |
 | 08 | `08_dashboard_novedades.md` | Dashboard de métricas y API pública de novedades. |
 | 09 | `09_gestion_roles_permisos.md` | Módulo de roles y permisos (CRUD de roles + catálogo). |
-| 10 | `esquema_bd.md` | Referencia completa de tablas, tipos e índices PostgreSQL. |
+| 10 | `10_api_profesionales.md` | API REST v1 del módulo profesionales (`/api/v1/profesionales`). |
+| 11 | `11_api_boletines_novedades.md` | API REST v1 (solo lectura) de boletines oficiales y novedades (`/api/v1/boletines-oficiales`, `/api/v1/novedades`). |
+| 12 | `esquema_bd.md` | Referencia completa de tablas, tipos e índices PostgreSQL. |
 
 ---
 
@@ -38,7 +40,11 @@ Sistema administrativo web para la gestión de **C**olegios de **P**rofesionales
 ├── roles            → CRUD de roles + asignación de permisos (catálogo)
 ├── boletin-oficial  → CRUD de boletines oficiales (con PDF adjunto)
 ├── auditoria        → Visualización de logs de auditoría
-└── api/novedades    → Endpoint JSON público de novedades (para frontend externo)
+└── api/v1/*              → API REST JSON (frontend externo, token Bearer)
+    ├── profesionales        → Matriculados (lectura/escritura)
+    ├── boletines-oficiales  → Boletines oficiales (solo lectura)
+    ├── novedades            → Novedades (solo lectura)
+    └── obras-sociales       → Obras sociales (solo lectura)
 ```
 
 ## Estructura de directorios

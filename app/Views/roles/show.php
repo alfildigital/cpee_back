@@ -35,6 +35,24 @@
                         <p class="form-control-plaintext"><?= htmlspecialchars($rol['descripcion'] ?? '—') ?></p>
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label text-muted small font-weight-bold">Registrado por</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext"><?= htmlspecialchars($rol['usuario_abm'] ?? '—') ?></p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label text-muted small font-weight-bold">Registrado el</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext"><?= htmlspecialchars($rol['created_at'] ?? '') ?></p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label text-muted small font-weight-bold">Actualizado el</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-plaintext"><?= htmlspecialchars($rol['updated_at'] ?? '') ?></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -15,6 +15,17 @@ abstract class BaseController
         return (int)($_SESSION['usuario_id'] ?? 0);
     }
 
+    /** Identificador del usuario logueado para la columna usuario_abm. */
+    protected function getCurrentUserAmb(): ?string
+    {
+        $nombre = trim((string)($_SESSION['usuario_nombre'] ?? ''));
+        if ($nombre !== '') {
+            return $nombre;
+        }
+        $email = trim((string)($_SESSION['usuario_email'] ?? ''));
+        return $email !== '' ? $email : null;
+    }
+
     protected function requireLogin(): void
     {
         Security::requireLogin();

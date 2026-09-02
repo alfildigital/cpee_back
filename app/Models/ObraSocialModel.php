@@ -33,8 +33,8 @@ class ObraSocialModel
     public function create(array $data): int
     {
         $stmt = $this->db->prepare("
-            INSERT INTO obras_sociales (nombre, descripcion, telefono, correo, url_sitio_web, logo)
-            VALUES (:nombre, :descripcion, :telefono, :correo, :url_sitio_web, :logo)
+            INSERT INTO obras_sociales (nombre, descripcion, telefono, correo, url_sitio_web, logo, usuario_abm)
+            VALUES (:nombre, :descripcion, :telefono, :correo, :url_sitio_web, :logo, :usuario_abm)
             RETURNING id
         ");
         $stmt->execute([
@@ -44,6 +44,7 @@ class ObraSocialModel
             ':correo' => $data['correo'] ?? null,
             ':url_sitio_web' => $data['url_sitio_web'] ?? null,
             ':logo' => $data['logo'] ?? null,
+            ':usuario_abm' => $data['usuario_abm'] ?? null,
         ]);
         return (int)$stmt->fetchColumn();
     }
@@ -58,6 +59,7 @@ class ObraSocialModel
                 correo = :correo,
                 url_sitio_web = :url_sitio_web,
                 logo = :logo,
+                usuario_abm = :usuario_abm,
                 updated_at = CURRENT_TIMESTAMP
             WHERE id = :id
         ");
@@ -69,6 +71,7 @@ class ObraSocialModel
             ':correo' => $data['correo'] ?? null,
             ':url_sitio_web' => $data['url_sitio_web'] ?? null,
             ':logo' => $data['logo'] ?? null,
+            ':usuario_abm' => $data['usuario_abm'] ?? null,
         ]);
     }
 
@@ -80,5 +83,41 @@ class ObraSocialModel
         } catch (Exception $e) {
             throw new Exception("Error al eliminar obra social: " . $e->getMessage());
         }
+    }
+
+    public function getPaginated(int $limit, int $offset, ?string $q = null): array
+    {
+        $sql = "SELECT * FROM obras_sociales";
+        $params = [];
+
+        if ($q !== null) {
+            $sql .= " WHERE nombre ILIKE :q OR descripcion ILIKE :q2";
+            $params[':q'] = '%' . $q . '%';
+            $params[':q2'] = '%' . $q . '%';
+        }
+
+        $sql .= " ORDER BY nombre ASC LIMIT :limit OFFSET :offset";
+        $params[':limit'] = $limit;
+        $params[':offset'] = $offset;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
+
+    public function count(?string $q = null): int
+    {
+        $sql = "SELECT COUNT(*) FROM obras_sociales";
+        $params = [];
+
+        if ($q !== null) {
+            $sql .= " WHERE nombre ILIKE :q OR descripcion ILIKE :q2";
+            $params[':q'] = '%' . $q . '%';
+            $params[':q2'] = '%' . $q . '%';
+        }
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return (int)$stmt->fetchColumn();
     }
 }

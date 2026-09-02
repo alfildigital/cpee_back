@@ -61,6 +61,73 @@ class NovedadModel
         return $result;
     }
 
+    public function getPaginated(int $limit, int $offset, ?string $q = null, ?bool $publicada = null): array
+    {
+        $sql = "
+            SELECT n.*,
+                   u.nombre AS autor,
+                   COALESCE((
+                     SELECT string_agg(r.nombre, ', ' ORDER BY r.nombre)
+                     FROM novedad_roles nr
+                     JOIN roles r ON r.id = nr.rol_id
+                     WHERE nr.novedad_id = n.id
+                   ), 'Todos') AS roles_nombres
+            FROM novedades n
+            LEFT JOIN usuarios u ON u.id = n.usuario_id
+        ";
+        $params = [];
+        $condiciones = [];
+
+        if ($q !== null) {
+            $condiciones[] = "(n.titulo ILIKE :q OR n.contenido ILIKE :q2)";
+            $params[':q'] = '%' . $q . '%';
+            $params[':q2'] = '%' . $q . '%';
+        }
+
+        if ($publicada !== null) {
+            $condiciones[] = "n.publicado = :publicado";
+            $params[':publicado'] = $publicada ? 1 : 0;
+        }
+
+        if ($condiciones !== []) {
+            $sql .= " WHERE " . implode(' AND ', $condiciones);
+        }
+
+        $sql .= " ORDER BY n.fecha_publicacion DESC, n.id DESC LIMIT :limit OFFSET :offset";
+        $params[':limit'] = $limit;
+        $params[':offset'] = $offset;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
+
+    public function count(?string $q = null, ?bool $publicada = null): int
+    {
+        $sql = "SELECT COUNT(*) FROM novedades n";
+        $params = [];
+        $condiciones = [];
+
+        if ($q !== null) {
+            $condiciones[] = "(n.titulo ILIKE :q OR n.contenido ILIKE :q2)";
+            $params[':q'] = '%' . $q . '%';
+            $params[':q2'] = '%' . $q . '%';
+        }
+
+        if ($publicada !== null) {
+            $condiciones[] = "n.publicado = :publicado";
+            $params[':publicado'] = $publicada ? 1 : 0;
+        }
+
+        if ($condiciones !== []) {
+            $sql .= " WHERE " . implode(' AND ', $condiciones);
+        }
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return (int)$stmt->fetchColumn();
+    }
+
     /** Roles del sistema disponibles para dirigir novedades. */
     public function getAllRoles(): array
     {
@@ -80,9 +147,9 @@ class NovedadModel
 
             $stmt = $this->db->prepare("
                 INSERT INTO novedades (usuario_id, titulo, contenido, publicado, fecha_publicacion,
-                                       archivo_nombre, archivo_ruta, archivo_tipo, archivo_tamano)
+                                       archivo_nombre, archivo_ruta, archivo_tipo, archivo_tamano, usuario_abm)
                 VALUES (:usuario_id, :titulo, :contenido, :publicado, :fecha_publicacion,
-                        :archivo_nombre, :archivo_ruta, :archivo_tipo, :archivo_tamano)
+                        :archivo_nombre, :archivo_ruta, :archivo_tipo, :archivo_tamano, :usuario_abm)
                 RETURNING id
             ");
             $stmt->execute([
@@ -95,6 +162,7 @@ class NovedadModel
                 ':archivo_ruta' => $data['archivo_ruta'] ?? null,
                 ':archivo_tipo' => $data['archivo_tipo'] ?? null,
                 ':archivo_tamano' => $data['archivo_tamano'] ?? null,
+                ':usuario_abm' => $data['usuario_abm'] ?? null,
             ]);
             $id = (int)$stmt->fetchColumn();
 
@@ -125,7 +193,9 @@ class NovedadModel
                     archivo_nombre = :archivo_nombre,
                     archivo_ruta = :archivo_ruta,
                     archivo_tipo = :archivo_tipo,
-                    archivo_tamano = :archivo_tamano
+                    archivo_tamano = :archivo_tamano,
+                    usuario_abm = :usuario_abm,
+                    updated_at = CURRENT_TIMESTAMP
                 WHERE id = :id
             ");
             $stmt->execute([
@@ -138,6 +208,7 @@ class NovedadModel
                 ':archivo_ruta' => $data['archivo_ruta'] ?? null,
                 ':archivo_tipo' => $data['archivo_tipo'] ?? null,
                 ':archivo_tamano' => $data['archivo_tamano'] ?? null,
+                ':usuario_abm' => $data['usuario_abm'] ?? null,
             ]);
 
             $del = $this->db->prepare("DELETE FROM novedad_roles WHERE novedad_id = :id");

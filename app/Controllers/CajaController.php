@@ -88,6 +88,7 @@ class CajaController extends BaseController
 
             $datosMovimiento = [
                 'usuario_id' => $this->getCurrentUserId(),
+                'usuario_abm' => $this->getCurrentUserAmb(),
                 'profesional_id' => empty($datosLimpios['profesional_id']) ? null : (int)$datosLimpios['profesional_id'],
                 'tipo' => $datosLimpios['tipo'],
                 'concepto' => $datosLimpios['concepto'],

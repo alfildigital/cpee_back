@@ -64,6 +64,12 @@
                         <p class="form-control-plaintext"><?= htmlspecialchars(date('d/m/Y H:i', strtotime($novedad['fecha_publicacion']))) ?></p>
                     </div>
                 </div>
+                <div class="form-group row mb-2">
+                    <label class="col-sm-5 col-form-label text-muted small font-weight-bold">Registrado por</label>
+                    <div class="col-sm-7">
+                        <p class="form-control-plaintext"><?= htmlspecialchars($novedad['usuario_abm'] ?? '—') ?></p>
+                    </div>
+                </div>
                 <hr>
                 <label class="text-muted small font-weight-bold d-block">Dirigida a</label>
                 <div>

@@ -63,10 +63,11 @@ class RolPermisoModel
     public function createPermiso(array $data): int
     {
         try {
-            $stmt = $this->db->prepare("INSERT INTO permisos (nombre, descripcion) VALUES (:nombre, :descripcion) RETURNING id");
+            $stmt = $this->db->prepare("INSERT INTO permisos (nombre, descripcion, usuario_abm) VALUES (:nombre, :descripcion, :usuario_abm) RETURNING id");
             $stmt->execute([
                 ':nombre' => $data['nombre'],
                 ':descripcion' => $data['descripcion'] ?? null,
+                ':usuario_abm' => $data['usuario_abm'] ?? null,
             ]);
             return (int)$stmt->fetchColumn();
         } catch (Exception $e) {
@@ -77,11 +78,12 @@ class RolPermisoModel
     public function updatePermiso(int $id, array $data): bool
     {
         try {
-            $stmt = $this->db->prepare("UPDATE permisos SET nombre = :nombre, descripcion = :descripcion WHERE id = :id");
+            $stmt = $this->db->prepare("UPDATE permisos SET nombre = :nombre, descripcion = :descripcion, usuario_abm = :usuario_abm, updated_at = CURRENT_TIMESTAMP WHERE id = :id");
             return $stmt->execute([
                 ':id' => $id,
                 ':nombre' => $data['nombre'],
                 ':descripcion' => $data['descripcion'] ?? null,
+                ':usuario_abm' => $data['usuario_abm'] ?? null,
             ]);
         } catch (Exception $e) {
             throw new Exception("Error al actualizar permiso: " . $e->getMessage());
@@ -104,13 +106,14 @@ class RolPermisoModel
             $this->db->beginTransaction();
 
             $stmt = $this->db->prepare("
-                INSERT INTO roles (nombre, descripcion)
-                VALUES (:nombre, :descripcion)
+                INSERT INTO roles (nombre, descripcion, usuario_abm)
+                VALUES (:nombre, :descripcion, :usuario_abm)
                 RETURNING id
             ");
             $stmt->execute([
                 ':nombre' => $data['nombre'],
                 ':descripcion' => $data['descripcion'] ?? null,
+                ':usuario_abm' => $data['usuario_abm'] ?? null,
             ]);
             $id = (int)$stmt->fetchColumn();
 
@@ -131,11 +134,12 @@ class RolPermisoModel
         try {
             $this->db->beginTransaction();
 
-            $stmt = $this->db->prepare("UPDATE roles SET nombre = :nombre, descripcion = :descripcion WHERE id = :id");
+            $stmt = $this->db->prepare("UPDATE roles SET nombre = :nombre, descripcion = :descripcion, usuario_abm = :usuario_abm, updated_at = CURRENT_TIMESTAMP WHERE id = :id");
             $stmt->execute([
                 ':id' => $id,
                 ':nombre' => $data['nombre'],
                 ':descripcion' => $data['descripcion'] ?? null,
+                ':usuario_abm' => $data['usuario_abm'] ?? null,
             ]);
 
             // Actualizar permisos (borrar y reinsertar)

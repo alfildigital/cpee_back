@@ -78,6 +78,18 @@
                                 <?php endif; ?>
                             </td>
                         </tr>
+                        <tr>
+                            <th class="text-muted">Registrado por</th>
+                            <td><?= htmlspecialchars($obra['usuario_abm'] ?? '—') ?></td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Registrado el</th>
+                            <td><?= htmlspecialchars($obra['created_at'] ?? '—') ?></td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Actualizado el</th>
+                            <td><?= htmlspecialchars($obra['updated_at'] ?? '—') ?></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
