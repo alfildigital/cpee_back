@@ -93,9 +93,9 @@ curl -H "Authorization: Bearer $API_API_KEY" \
       "titulo": "Resolución N° 12/2026",
       "resumen": "Aprobación de nuevos aranceles del ejercicio 2026.",
       "archivo_nombre": "resolucion-12-2026.pdf",
-      "archivo_ruta": "uploads/boletin/9f2c4e1a0b3d5c7f8a9b0c1d2e3f4a5b.pdf",
       "archivo_tipo": "application/pdf",
       "archivo_tamano": 245760,
+      "archivo_base64": "JVBERi0xLjQKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZw...",
       "usuario_abm": "admin",
       "created_at": "2026-08-27 12:19:18",
       "updated_at": "2026-08-28 09:11:03"
@@ -122,9 +122,9 @@ curl -H "Authorization: Bearer $API_API_KEY" \
     "titulo": "Resolución N° 12/2026",
     "resumen": "Aprobación de nuevos aranceles del ejercicio 2026.",
     "archivo_nombre": "resolucion-12-2026.pdf",
-    "archivo_ruta": "uploads/boletin/9f2c4e1a0b3d5c7f8a9b0c1d2e3f4a5b.pdf",
     "archivo_tipo": "application/pdf",
     "archivo_tamano": 245760,
+    "archivo_base64": "JVBERi0xLjQKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZw...",
     "usuario_abm": "admin",
     "created_at": "2026-08-27 12:19:18",
     "updated_at": "2026-08-28 09:11:03"
@@ -246,10 +246,9 @@ app/Models/NovedadModel.php                           → + getPaginated(), coun
 .env                                                  → API_ENABLED, API_API_KEY
 ```
 
-Los `archivo_ruta` apuntan a archivos en `uploads/` (fuera del Document Root, no accesibles por web). La descarga pública de los PDF se resuelve por los endpoints internos `/cpee/boletin-oficial/descargar/{id}` y `/cpee/novedades/descargar/{id}` (con sesión), no por la API.
+Los `archivo_base64` contienen el PDF codificado en Base64 listo para usar en el frontend (ej: `data:application/pdf;base64,` + valor). La ruta del archivo (`archivo_ruta`) no se expone por seguridad ya que está fuera del Document Root.
 
 ## 8. Extensiones futuras
 
-- Endpoint de descarga de PDF por la API: `GET /api/v1/boletines-oficiales/{id}/archivo` y `GET /api/v1/novedades/{id}/archivo`.
 - Sub-versiones (`v2`) sin romper `v1`: basta crear el controlador correspondiente bajo `app/Controllers/Api/`.
 - Nuevos recursos (ej. `obras-sociales`) junto a los existentes en la misma convención.

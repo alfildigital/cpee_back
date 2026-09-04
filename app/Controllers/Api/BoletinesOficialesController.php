@@ -18,14 +18,25 @@ class BoletinesOficialesController extends ApiController
 
     private function map(array $row): array
     {
+        $archivoBase64 = null;
+        if (!empty($row['archivo_ruta'])) {
+            $rutaAbsoluta = ROOT_PATH . '/' . $row['archivo_ruta'];
+            if (is_file($rutaAbsoluta)) {
+                $contenido = file_get_contents($rutaAbsoluta);
+                if ($contenido !== false) {
+                    $archivoBase64 = base64_encode($contenido);
+                }
+            }
+        }
+
         return [
             'id' => (int)$row['id'],
             'titulo' => $row['titulo'],
             'resumen' => $row['resumen'] ?? null,
             'archivo_nombre' => $row['archivo_nombre'] ?? null,
-            'archivo_ruta' => $row['archivo_ruta'] ?? null,
             'archivo_tipo' => $row['archivo_tipo'] ?? null,
             'archivo_tamano' => isset($row['archivo_tamano']) ? (int)$row['archivo_tamano'] : null,
+            'archivo_contenido' => $archivoBase64,
             'usuario_abm' => $row['usuario_abm'] ?? null,
             'created_at' => $row['created_at'],
             'updated_at' => $row['updated_at'],

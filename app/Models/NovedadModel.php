@@ -21,20 +21,13 @@ class NovedadModel
         $this->db = Database::getInstance()->getConnection();
     }
 
-    /** Todas las novedades con autor y roles destinatarios, más recientes primero. */
+    /** Todas las novedades qque esten publicadas, más recientes primero. */
     public function getAll(): array
     {
         $stmt = $this->db->query("
-            SELECT n.*,
-                   u.nombre AS autor,
-                   COALESCE((
-                     SELECT string_agg(r.nombre, ', ' ORDER BY r.nombre)
-                     FROM novedad_roles nr
-                     JOIN roles r ON r.id = nr.rol_id
-                     WHERE nr.novedad_id = n.id
-                   ), 'Todos') AS roles_nombres
+            SELECT n.*
             FROM novedades n
-            LEFT JOIN usuarios u ON u.id = n.usuario_id
+            WHERE n.publicado = true
             ORDER BY n.fecha_publicacion DESC, n.id DESC
         ");
         return $stmt->fetchAll();
@@ -43,10 +36,10 @@ class NovedadModel
     public function getById(int $id): ?array
     {
         $stmt = $this->db->prepare("
-            SELECT n.*, u.nombre AS autor
+            SELECT n.*
             FROM novedades n
-            LEFT JOIN usuarios u ON u.id = n.usuario_id
-            WHERE n.id = :id
+            WHERE n.publicado = true
+            AND n.id = :id
         ");
         $stmt->execute([':id' => $id]);
         $result = $stmt->fetch();
@@ -64,16 +57,9 @@ class NovedadModel
     public function getPaginated(int $limit, int $offset, ?string $q = null, ?bool $publicada = null): array
     {
         $sql = "
-            SELECT n.*,
-                   u.nombre AS autor,
-                   COALESCE((
-                     SELECT string_agg(r.nombre, ', ' ORDER BY r.nombre)
-                     FROM novedad_roles nr
-                     JOIN roles r ON r.id = nr.rol_id
-                     WHERE nr.novedad_id = n.id
-                   ), 'Todos') AS roles_nombres
+            SELECT n.*
             FROM novedades n
-            LEFT JOIN usuarios u ON u.id = n.usuario_id
+            WHERE n.publicado = true
         ";
         $params = [];
         $condiciones = [];
@@ -104,7 +90,7 @@ class NovedadModel
 
     public function count(?string $q = null, ?bool $publicada = null): int
     {
-        $sql = "SELECT COUNT(*) FROM novedades n";
+        $sql = "SELECT COUNT(*) FROM novedades n WHERE n.publicado = true";
         $params = [];
         $condiciones = [];
 
@@ -166,7 +152,7 @@ class NovedadModel
             ]);
             $id = (int)$stmt->fetchColumn();
 
-            $this->asignarRoles($id, $roles);
+            // $this->asignarRoles($id, $roles);
 
             $this->db->commit();
             return $id;
@@ -213,7 +199,7 @@ class NovedadModel
 
             $del = $this->db->prepare("DELETE FROM novedad_roles WHERE novedad_id = :id");
             $del->execute([':id' => $id]);
-            $this->asignarRoles($id, $roles);
+            //$this->asignarRoles($id, $roles);
 
             $this->db->commit();
             return true;

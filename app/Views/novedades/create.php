@@ -34,52 +34,34 @@
             <div class="mb-3 text-start">
                 <label for="contenido" class="form-label">Contenido *</label>
                 <textarea class="form-control" id="contenido" name="contenido" rows="6" required></textarea>
-                <div class="form-text text-muted">Texto del comunicado o noticia.</div>
+                <div class="form-text text-muted"><small><b><i>Texto del comunicado o noticia.</i></b></small></div>
             </div>
 
             <div class="row mb-3">
-                <div class="col-md-6 text-start">
+                <div class="col-md-4 text-start">
                     <label for="fecha_publicacion" class="form-label">Fecha de Publicación</label>
                     <input type="datetime-local" class="form-control" id="fecha_publicacion"
-                           name="fecha_publicacion" value="<?= htmlspecialchars(date('Y-m-d\TH:i')) ?>">
-                    <div class="form-text text-muted">Dejar vacío para usar la fecha y hora actual.</div>
+                        name="fecha_publicacion" value="<?= htmlspecialchars(date('Y-m-d\TH:i')) ?>">
+                    <div class="form-text text-muted"><small><b><i>Dejar vacío para usar la fecha y hora actual.</i></b></small></div>
                 </div>
-                <div class="col-md-6 text-start">
+                <div class="col-md-4 text-start">
                     <label class="form-label d-block">Estado</label>
                     <div class="custom-control custom-switch mt-2">
                         <input type="checkbox" class="custom-control-input" id="publicado" name="publicado" checked>
                         <label class="custom-control-label" for="publicado">Publicada (visible)</label>
                     </div>
-                    <div class="form-text text-muted">Desmarca para guardarla como borrador.</div>
+                    <div class="form-text text-muted"><small><b><i>Desmarca para guardarla como borrador.</i></b></small></div>
+                </div>
+
+                <div class="col-md-4 text-start">
+                    <label class="form-label">Adjunto PDF</label>
+                    <input type="file" class="form-control" id="archivo" name="archivo" accept="application/pdf,.pdf"
+                        onchange="cpeeNovedadPreview(this)">
+                    <div class="form-text text-muted"><small><b><i>Solo PDF. Máx. 5 MB.</i></b></small></div>
                 </div>
             </div>
 
-            <div class="mb-3 text-start">
-                <label class="form-label">Dirigida a (destinatarios por rol)</label>
-                <div class="border rounded p-3 bg-light">
-                    <div class="row">
-                        <?php foreach ($roles as $rol): ?>
-                            <div class="col-md-4">
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input"
-                                           id="rol_<?= (int)$rol['id'] ?>" name="roles[]" value="<?= (int)$rol['id'] ?>">
-                                    <label class="custom-control-label" for="rol_<?= (int)$rol['id'] ?>">
-                                        <?= htmlspecialchars($rol['nombre']) ?>
-                                    </label>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                    <div class="form-text text-muted mt-2">Si no seleccionas ningún rol, la novedad se dirige a todos.</div>
-                </div>
-            </div>
 
-            <div class="mb-3 text-start">
-                <label class="form-label">Adjunto PDF (opcional)</label>
-                <input type="file" class="form-control" id="archivo" name="archivo" accept="application/pdf,.pdf"
-                       onchange="cpeeNovedadPreview(this)">
-                <div class="form-text text-muted">Solo PDF. Máx. 5 MB.</div>
-            </div>
 
             <hr>
             <div class="text-right">

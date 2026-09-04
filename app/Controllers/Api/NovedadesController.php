@@ -18,6 +18,16 @@ class NovedadesController extends ApiController
 
     private function map(array $row): array
     {
+        $archivoBase64 = null;
+        if (!empty($row['archivo_ruta'])) {
+            $rutaAbsoluta = ROOT_PATH . '/' . $row['archivo_ruta'];
+            if (is_file($rutaAbsoluta)) {
+                $contenido = file_get_contents($rutaAbsoluta);
+                if ($contenido !== false) {
+                    $archivoBase64 = base64_encode($contenido);
+                }
+            }
+        }
         return [
             'id' => (int)$row['id'],
             'usuario_id' => isset($row['usuario_id']) ? (int)$row['usuario_id'] : null,
@@ -28,8 +38,9 @@ class NovedadesController extends ApiController
             'archivo_nombre' => $row['archivo_nombre'] ?? null,
             'archivo_ruta' => $row['archivo_ruta'] ?? null,
             'archivo_tipo' => $row['archivo_tipo'] ?? null,
+            'archivo_contenido' => $archivoBase64,
             'archivo_tamano' => isset($row['archivo_tamano']) ? (int)$row['archivo_tamano'] : null,
-            'autor' => $row['autor'] ?? null,
+            'autor' => "Secretaria General",
             'roles_nombres' => $row['roles_nombres'] ?? null,
             'roles' => isset($row['roles']) ? array_map('intval', $row['roles']) : null,
             'usuario_abm' => $row['usuario_abm'] ?? null,

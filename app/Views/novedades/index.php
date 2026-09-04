@@ -17,8 +17,7 @@
                         <th>ID</th>
                         <th>Título</th>
                         <th>Autor</th>
-                        <th>Publicación</th>
-                        <th>Dirigida a</th>
+                        <th>Fecha de Publicación</th>
                         <th>Estado</th>
                         <th class="no-sort">Acciones</th>
                     </tr>
@@ -33,9 +32,8 @@
                             <tr>
                                 <td><?= (int)$novedad['id'] ?></td>
                                 <td><?= htmlspecialchars($novedad['titulo']) ?></td>
-                                <td><?= htmlspecialchars($novedad['autor'] ?? '—') ?></td>
+                                <td>Secretaría General</td>
                                 <td><?= htmlspecialchars(date('d/m/Y H:i', strtotime($novedad['fecha_publicacion']))) ?></td>
-                                <td><?= htmlspecialchars($novedad['roles_nombres'] ?? 'Todos') ?></td>
                                 <td>
                                     <?php if (!empty($novedad['publicado'])): ?>
                                         <span class="badge badge-success">Publicada</span>
@@ -51,9 +49,9 @@
                                         <i class="fas fa-pencil-alt"></i>
                                     </a>
                                     <button type="button" class="btn btn-sm btn-outline-danger btn-delete" title="Eliminar"
-                                            data-url="/cpee/novedades/eliminar"
-                                            data-id="<?= (int)$novedad['id'] ?>"
-                                            data-nombre="<?= htmlspecialchars($novedad['titulo']) ?>">
+                                        data-url="/cpee/novedades/eliminar"
+                                        data-id="<?= (int)$novedad['id'] ?>"
+                                        data-nombre="<?= htmlspecialchars($novedad['titulo']) ?>">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </td>
@@ -103,9 +101,16 @@
             $('#deleteModal').modal('show');
         });
         $('#dataTable').DataTable({
-            "language": { "url": "/cpee/assets/vendor/datatables/Spanish.json" },
-            "columnDefs": [{ "targets": "no-sort", "orderable": false }],
-            "order": [[0, "desc"]]
+            "language": {
+                "url": "/cpee/assets/vendor/datatables/Spanish.json"
+            },
+            "columnDefs": [{
+                "targets": "no-sort",
+                "orderable": false
+            }],
+            "order": [
+                [0, "desc"]
+            ]
         });
     });
 </script>
