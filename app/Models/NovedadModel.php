@@ -121,21 +121,19 @@ class NovedadModel
         return $stmt->fetchAll();
     }
 
-    /**
-     * Crea una novedad y sus destinatarios de roles (transacción).
-     *
-     * @param array $roles lista de IDs de rol destinatarios (vacío = para todos)
-     */
-    public function create(array $data, array $roles): int
+    public function create(array $data): int
     {
+
         try {
             $this->db->beginTransaction();
 
             $stmt = $this->db->prepare("
                 INSERT INTO novedades (usuario_id, titulo, contenido, publicado, fecha_publicacion,
-                                       archivo_nombre, archivo_ruta, archivo_tipo, archivo_tamano, usuario_abm)
+                                       archivo_nombre, archivo_ruta, archivo_tipo, archivo_tamano,
+                                       img_nombre, img_ruta, img_tipo, img_tamano, usuario_abm)
                 VALUES (:usuario_id, :titulo, :contenido, :publicado, :fecha_publicacion,
-                        :archivo_nombre, :archivo_ruta, :archivo_tipo, :archivo_tamano, :usuario_abm)
+                        :archivo_nombre, :archivo_ruta, :archivo_tipo, :archivo_tamano,
+                        :img_nombre, :img_ruta, :img_tipo, :img_tamano, :usuario_abm)
                 RETURNING id
             ");
             $stmt->execute([
@@ -148,6 +146,10 @@ class NovedadModel
                 ':archivo_ruta' => $data['archivo_ruta'] ?? null,
                 ':archivo_tipo' => $data['archivo_tipo'] ?? null,
                 ':archivo_tamano' => $data['archivo_tamano'] ?? null,
+                ':img_nombre' => $data['img_nombre'] ?? null,
+                ':img_ruta' => $data['img_ruta'] ?? null,
+                ':img_tipo' => $data['img_tipo'] ?? null,
+                ':img_tamano' => $data['img_tamano'] ?? null,
                 ':usuario_abm' => $data['usuario_abm'] ?? null,
             ]);
             $id = (int)$stmt->fetchColumn();
@@ -164,9 +166,11 @@ class NovedadModel
         }
     }
 
-    /** Actualiza una novedad, reemplazando sus destinatarios de roles. */
-    public function update(int $id, array $data, array $roles): bool
+    /** Actualiza una novedad */
+    public function update(int $id, array $data): bool
     {
+
+
         try {
             $this->db->beginTransaction();
 
@@ -180,6 +184,10 @@ class NovedadModel
                     archivo_ruta = :archivo_ruta,
                     archivo_tipo = :archivo_tipo,
                     archivo_tamano = :archivo_tamano,
+                    img_nombre = :img_nombre,
+                    img_ruta = :img_ruta,
+                    img_tipo = :img_tipo,
+                    img_tamano = :img_tamano,
                     usuario_abm = :usuario_abm,
                     updated_at = CURRENT_TIMESTAMP
                 WHERE id = :id
@@ -194,6 +202,10 @@ class NovedadModel
                 ':archivo_ruta' => $data['archivo_ruta'] ?? null,
                 ':archivo_tipo' => $data['archivo_tipo'] ?? null,
                 ':archivo_tamano' => $data['archivo_tamano'] ?? null,
+                ':img_nombre' => $data['img_nombre'] ?? null,
+                ':img_ruta' => $data['img_ruta'] ?? null,
+                ':img_tipo' => $data['img_tipo'] ?? null,
+                ':img_tamano' => $data['img_tamano'] ?? null,
                 ':usuario_abm' => $data['usuario_abm'] ?? null,
             ]);
 
@@ -227,17 +239,5 @@ class NovedadModel
             ORDER BY fecha_publicacion DESC, id DESC
         ");
         return $stmt->fetchAll();
-    }
-
-    private function asignarRoles(int $novedadId, array $roles): void
-    {
-        $roles = array_values(array_unique(array_map('intval', $roles)));
-        $stmt = $this->db->prepare("INSERT INTO novedad_roles (novedad_id, rol_id) VALUES (:novedad_id, :rol_id)");
-        foreach ($roles as $rolId) {
-            if ($rolId <= 0) {
-                continue;
-            }
-            $stmt->execute([':novedad_id' => $novedadId, ':rol_id' => $rolId]);
-        }
     }
 }

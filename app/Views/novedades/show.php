@@ -26,6 +26,25 @@
                     <p class="mb-4" style="white-space: pre-wrap;"><?= htmlspecialchars($novedad['contenido']) ?></p>
                 </div>
 
+                <!-- imagen -->
+                <?php if (!empty($novedad['img_ruta'])): ?>
+                    <hr>
+                    <h6 class="m-0 font-weight-bold text-primary mb-2">Adjunto</h6>
+                    <div class="d-flex align-items-center justify-content-between border rounded p-3 bg-light">
+                        <div>
+                            <i class="fas fa-file-pdf text-danger mr-2"></i>
+                            <strong><?= htmlspecialchars($novedad['img_nombre'] ?? basename($novedad['img_ruta'])) ?></strong>
+                            <div class="small text-muted">
+                                <?= $novedad['img_tamano'] ? number_format((int)$novedad['img_tamano'] / 1024, 1) . ' KB' : '' ?>
+                            </div>
+                        </div>
+                        <a href="/cpee/novedades/descargarImg/<?= (int)$novedad['id'] ?>" class="btn btn-sm btn-outline-primary" target="_blank">
+                            <i class="fas fa-download mr-1"></i> Descargar
+                        </a>
+                    </div>
+                <?php endif; ?>
+
+                <!-- files pdf -->
                 <?php if (!empty($novedad['archivo_ruta'])): ?>
                     <hr>
                     <h6 class="m-0 font-weight-bold text-primary mb-2">Adjunto</h6>

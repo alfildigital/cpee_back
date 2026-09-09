@@ -56,6 +56,31 @@
                     </div>
                     <div class="form-text text-muted"><small><b><i>Desmarca para guardarla como borrador.</i></b></small></div>
                 </div>
+
+                <!-- imagen -->
+                <div class="col-md-4 text-start">
+                    <label class="form-label">Adjuntar Imagen</label>
+                    <?php if (!empty($novedad['img_ruta'])): ?>
+                        <div class="border rounded p-2 bg-light mb-2 d-flex align-items-center justify-content-between">
+                            <div class="text-truncate pr-2">
+                                <i class="fas fa-solid fa-image text-danger mr-2"></i>
+                                <?= htmlspecialchars($novedad['img_nombre'] ?? basename($novedad['img_ruta'])) ?>
+                            </div>
+                            <a href="/cpee/novedades/descargarImg/<?= (int)$novedad['id'] ?>" target="_blank" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="remover_img" name="remover_img" value="1">
+                            <label class="form-check-label text-danger" for="remover_img">Quitar imagen actual</label>
+                        </div>
+                    <?php endif; ?>
+                    <input type="file" class="form-control" id="img" name="img"
+                        onchange="cpeeNovedadImg(this)">
+                    <div class="form-text text-muted"><small><b><i> Máx. 5 MB. Dejar vacío para conservar el actual.</i></b></small></div>
+                </div>
+
+                <!-- archivo pdf -->
                 <div class="col-md-4 text-start">
                     <label class="form-label">Adjunto PDF</label>
                     <?php if (!empty($novedad['archivo_ruta'])): ?>
@@ -78,8 +103,6 @@
                     <div class="form-text text-muted"><small><b><i>Solo PDF. Máx. 5 MB. Dejar vacío para conservar el actual.</i></b></small></div>
                 </div>
             </div>
-
-
 
             <hr>
             <div class="text-right">
@@ -110,6 +133,29 @@
             return;
         }
         const cb = document.getElementById('remover_archivo');
+        if (cb) {
+            cb.checked = false;
+        }
+    }
+
+    function cpeeNovedadImg(input) {
+
+        if (!input.files || !input.files[0]) {
+            return;
+        }
+        const f = input.files[0];
+        const MAX = 5 * 1024 * 1024;
+        if (f.size > MAX) {
+            alert('El tamaño supera el tamaño máximo de 5 MB.');
+            input.value = '';
+            return;
+        }
+        // if (f.type !== 'image/jpeg' || f.type !== 'image/jpg') {
+        //     alert('Solo se permiten archivos de imagen .jpeg .jpg.');
+        //     input.value = '';
+        //     return;
+        // }
+        const cb = document.getElementById('img_archivo');
         if (cb) {
             cb.checked = false;
         }

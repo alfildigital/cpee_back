@@ -70,15 +70,18 @@ class NovedadesController extends BaseController
 
         try {
             $datosLimpios = Security::sanitizeInput($_POST);
-            $rolesNovedad = array_map(static fn($r) => (int)$r, (array)($_POST['roles'] ?? []));
+            // $rolesNovedad = array_map(static fn($r) => (int)$r, (array)($_POST['roles'] ?? []));
 
             if (empty($datosLimpios['titulo']) || empty($datosLimpios['contenido'])) {
                 throw new Exception("Título y Contenido son obligatorios");
             }
 
             $model = new NovedadModel();
+
+            // archivo pdf
             $archivo = Upload::store($_FILES['archivo'] ?? [], 'novedades');
-            $id = $model->create($this->datosParaGuardar($datosLimpios, $archivo), $rolesNovedad);
+            $img = Upload::storeImage($_FILES['img'] ?? [], 'novedades/fotos');
+            $id = $model->create($this->datosParaGuardar($datosLimpios, $archivo, $img));
 
             Security::logAudit(
                 $this->getCurrentUserId(),
@@ -131,16 +134,22 @@ class NovedadesController extends BaseController
         $this->requireCsrf();
 
         try {
+
+            // paso los datos a la funcion que limpia los que llega del form
             $datosLimpios = Security::sanitizeInput($_POST);
             $id = (int)($datosLimpios['id'] ?? 0);
-            $rolesNovedad = array_map(static fn($r) => (int)$r, (array)($_POST['roles'] ?? []));
+            // $rolesNovedad = array_map(static fn($r) => (int)$r, (array)($_POST['roles'] ?? []));
 
             if ($id <= 0 || empty($datosLimpios['titulo']) || empty($datosLimpios['contenido'])) {
                 throw new Exception("Título y Contenido son obligatorios");
             }
 
+            // instancio el modelo
             $model = new NovedadModel();
+
+            // obtengo los datos anteriores
             $datosAnteriores = $model->getById($id);
+
             if (!$datosAnteriores) {
                 throw new Exception("Novedad no encontrada");
             }
@@ -148,6 +157,10 @@ class NovedadesController extends BaseController
             // PDF adjunto: nuevo / quitar / conservar
             $nuevaArchivo = Upload::store($_FILES['archivo'] ?? [], 'novedades');
             $removerArchivo = isset($_POST['remover_archivo']) && $_POST['remover_archivo'] === '1';
+
+            // img: nuevo / quitar / conservar
+            $nuevaImg = Upload::storeImage($_FILES['img'] ?? [], 'novedades/fotos');
+            $removerImg = isset($_POST['remover_img']) && $_POST['remover_img'] === '1';
 
             if ($nuevaArchivo) {
                 if (!empty($datosAnteriores['archivo_ruta']) && $datosAnteriores['archivo_ruta'] !== $nuevaArchivo['ruta']) {
@@ -168,8 +181,29 @@ class NovedadesController extends BaseController
                 ];
             }
 
-            $model->update($id, $this->datosParaGuardar($datosLimpios, $archivo), $rolesNovedad);
 
+            if ($nuevaImg) {
+                if (!empty($datosAnteriores['img_ruta']) && $datosAnteriores['img_ruta'] !== $nuevaImg['ruta']) {
+                    Upload::delete($datosAnteriores['img_ruta']);
+                }
+                $img = $nuevaImg;
+            } elseif ($removerImg) {
+                if (!empty($datosAnteriores['img_ruta'])) {
+                    Upload::delete($datosAnteriores['img_ruta']);
+                }
+                $img = null;
+            } else {
+                $img = [
+                    'nombre' => $datosAnteriores['img_nombre'] ?? null,
+                    'ruta'   => $datosAnteriores['img_ruta'] ?? null,
+                    'tipo'   => $datosAnteriores['img_tipo'] ?? null,
+                    'tamano' => $datosAnteriores['img_tamano'] ?? null,
+                ];
+            }
+
+            $model->update($id, $this->datosParaGuardar($datosLimpios, $archivo, $img));
+
+            // cargo adutoria
             Security::logAudit(
                 $this->getCurrentUserId(),
                 'UPDATE',
@@ -231,7 +265,7 @@ class NovedadesController extends BaseController
     }
 
     /** Prepara conjunto de datos para create()/update() del modelo. */
-    private function datosParaGuardar(array $datosLimpios, ?array $archivo = null): array
+    private function datosParaGuardar(array $datosLimpios, ?array $archivo = null, ?array $img = null): array
     {
         $fecha = isset($datosLimpios['fecha_publicacion']) && trim((string)$datosLimpios['fecha_publicacion']) !== ''
             ? $datosLimpios['fecha_publicacion']
@@ -251,6 +285,13 @@ class NovedadesController extends BaseController
             $data['archivo_ruta']   = $archivo['ruta'] ?? null;
             $data['archivo_tipo']   = $archivo['tipo'] ?? null;
             $data['archivo_tamano'] = $archivo['tamano'] ?? null;
+        }
+
+        if ($img !== null) {
+            $data['img_nombre'] = $img['nombre'] ?? null;
+            $data['img_ruta']   = $img['ruta'] ?? null;
+            $data['img_tipo']   = $img['tipo'] ?? null;
+            $data['img_tamano'] = $img['tamano'] ?? null;
         }
 
         return $data;
@@ -285,6 +326,41 @@ class NovedadesController extends BaseController
             : basename($novedad['archivo_ruta']);
 
         header('Content-Type: ' . ($novedad['archivo_tipo'] ?: 'application/octet-stream'));
+        header('Content-Disposition: inline; filename="' . basename($nombreDescarga) . '"');
+        header('Content-Length: ' . (string)@filesize($rutaAbsoluta));
+        readfile($rutaAbsoluta);
+        exit;
+    }
+
+    // GET /novedades/descargar/{id}   -> sirve el PDF adjunto (con sesión)
+    public function descargarImg(?string $id = null): void
+    {
+        $this->requireLogin();
+
+        $id = (int)($id ?? 0);
+        if ($id <= 0) {
+            $this->redirect('/cpee/novedades');
+        }
+
+        $model = new NovedadModel();
+        $novedad = $model->getById($id);
+
+        if (!$novedad || empty($novedad['img_ruta'])) {
+            Security::flash('danger', 'La novedad no posee imagen adjunto.');
+            $this->redirect('/cpee/novedades');
+        }
+
+        $rutaAbsoluta = ROOT_PATH . '/' . $novedad['img_ruta'];
+        if (!is_file($rutaAbsoluta)) {
+            Security::flash('danger', 'El img adjunto no existe en el servidor.');
+            $this->redirect('/cpee/novedades');
+        }
+
+        $nombreDescarga = !empty($novedad['img_nombre'])
+            ? $novedad['img_nombre']
+            : basename($novedad['img_ruta']);
+
+        header('Content-Type: ' . $novedad['img_tipo']);
         header('Content-Disposition: inline; filename="' . basename($nombreDescarga) . '"');
         header('Content-Length: ' . (string)@filesize($rutaAbsoluta));
         readfile($rutaAbsoluta);

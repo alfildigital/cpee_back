@@ -28,6 +28,18 @@ class NovedadesController extends ApiController
                 }
             }
         }
+
+        $imgBase64 = null;
+        if (!empty($row['img_ruta'])) {
+            $rutaAbsoluta = ROOT_PATH . '/' . $row['img_ruta'];
+            if (is_file($rutaAbsoluta)) {
+                $contenido = file_get_contents($rutaAbsoluta);
+                if ($contenido !== false) {
+                    $imgBase64 = base64_encode($contenido);
+                }
+            }
+        }
+
         return [
             'id' => (int)$row['id'],
             'usuario_id' => isset($row['usuario_id']) ? (int)$row['usuario_id'] : null,
@@ -40,6 +52,11 @@ class NovedadesController extends ApiController
             'archivo_tipo' => $row['archivo_tipo'] ?? null,
             'archivo_contenido' => $archivoBase64,
             'archivo_tamano' => isset($row['archivo_tamano']) ? (int)$row['archivo_tamano'] : null,
+            'img_nombre' => $row['img_nombre'] ?? null,
+            'img_ruta' => $row['img_ruta'] ?? null,
+            'img_tipo' => $row['img_tipo'] ?? null,
+            'img_contenido' => $imgBase64,
+            'img_tamano' => isset($row['img_tamano']) ? (int)$row['img_tamano'] : null,
             'autor' => "Secretaria General",
             'roles_nombres' => $row['roles_nombres'] ?? null,
             'roles' => isset($row['roles']) ? array_map('intval', $row['roles']) : null,

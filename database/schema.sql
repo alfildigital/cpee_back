@@ -260,6 +260,10 @@ CREATE TABLE novedades (
     archivo_ruta VARCHAR(500),
     archivo_tipo VARCHAR(100),
     archivo_tamano BIGINT,
+    img_nombre VARCHAR(255),
+    img_ruta VARCHAR(500),
+    img_tipo VARCHAR(100),
+    img_tamano BIGINT,
     usuario_abm VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -282,6 +286,14 @@ CREATE TABLE auditoria_logs (
     registro_id INT,
     datos_anteriores JSONB,
     datos_nuevos JSONB,
+    api_endpoint VARCHAR(255),
+    http_method VARCHAR(10),
+    http_status INT,
+    query_params JSONB,
+    request_headers JSONB,
+    request_body JSONB,
+    response_body JSONB,
+    duracion_ms INT,
     ip_origen VARCHAR(45),
     user_agent TEXT,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -300,3 +312,7 @@ CREATE INDEX idx_caja_movimientos_fecha ON caja_movimientos (fecha_movimiento);
 CREATE INDEX idx_auditoria_logs_timestamp ON auditoria_logs (timestamp);
 
 CREATE INDEX idx_auditoria_logs_tabla ON auditoria_logs (tabla_afectada);
+
+CREATE INDEX idx_auditoria_logs_http_method ON auditoria_logs (http_method);
+
+CREATE INDEX idx_auditoria_logs_http_status ON auditoria_logs (http_status);
