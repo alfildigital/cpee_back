@@ -32,56 +32,72 @@
             </li>
             <hr class="sidebar-divider">
             <div class="sidebar-heading">Módulos</div>
-            <li class="nav-item">
-                <a class="nav-link" href="/cpee/profesionales">
-                    <i class="fas fa-fw fa-users"></i>
-                    <span>Matriculados</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/cpee/caja">
-                    <i class="fas fa-fw fa-cash-register"></i>
-                    <span>Caja / Tesorería</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/cpee/novedades">
-                    <i class="fas fa-fw fa-exclamation-circle"></i>
-                    <span>Novedades</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/cpee/obras-sociales">
-                    <i class="fas fa-fw fa-building"></i>
-                    <span>Obras Sociales</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/cpee/boletin-oficial">
-                    <i class="fas fa-fw fa-file-alt"></i>
-                    <span>Boletín Oficial</span>
-                </a>
-            </li>
+            <?php if (\App\Core\Security::hasPermission('profesionales_ver')): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="/cpee/profesionales">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Matriculados</span>
+                    </a>
+                </li>
+            <?php endif; ?>
+            <?php if (\App\Core\Security::hasPermission('movimientos_ver')): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="/cpee/caja">
+                        <i class="fas fa-fw fa-cash-register"></i>
+                        <span>Caja / Tesorería</span>
+                    </a>
+                </li>
+            <?php endif; ?>
+            <?php if (\App\Core\Security::hasPermission('novedades_ver')): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="/cpee/novedades">
+                        <i class="fas fa-fw fa-exclamation-circle"></i>
+                        <span>Novedades</span>
+                    </a>
+                </li>
+            <?php endif; ?>
+            <?php if (\App\Core\Security::hasPermission('obra_social_ver')): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="/cpee/obras-sociales">
+                        <i class="fas fa-fw fa-building"></i>
+                        <span>Obras Sociales</span>
+                    </a>
+                </li>
+            <?php endif; ?>
+            <?php if (\App\Core\Security::hasPermission('boletin_oficial_ver')): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="/cpee/boletin-oficial">
+                        <i class="fas fa-fw fa-file-alt"></i>
+                        <span>Boletín Oficial</span>
+                    </a>
+                </li>
+            <?php endif; ?>
             <hr class="sidebar-divider">
             <div class="sidebar-heading">Sistema</div>
-            <li class="nav-item">
-                <a class="nav-link" href="/cpee/usuarios">
-                    <i class="fas fa-fw fa-user-cog"></i>
-                    <span>Usuarios</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/cpee/roles">
-                    <i class="fas fa-fw fa-user-shield"></i>
-                    <span>Roles y Permisos</span>
-                </a>
-            </li>
+            <?php if (\App\Core\Security::hasPermission('usuarios_ver')): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="/cpee/usuarios">
+                        <i class="fas fa-fw fa-user-cog"></i>
+                        <span>Usuarios</span>
+                    </a>
+                </li>
+            <?php endif; ?>
+            <?php if (\App\Core\Security::hasPermission('roles_ver')): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="/cpee/roles">
+                        <i class="fas fa-fw fa-user-shield"></i>
+                        <span>Roles y Permisos</span>
+                    </a>
+                </li>
+            <?php endif; ?>
+            <?php if (\App\Core\Security::hasPermission(['usuarios_ver', 'roles_ver'])): ?>
             <li class="nav-item">
                 <a class="nav-link" href="/cpee/auditoria">
                     <i class="fas fa-fw fa-clipboard-list"></i>
                     <span>Auditoría</span>
                 </a>
             </li>
+            <?php endif; ?>
             <hr class="sidebar-divider">
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>

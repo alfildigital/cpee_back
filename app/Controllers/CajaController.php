@@ -16,6 +16,13 @@ class CajaController extends BaseController
     // GET /caja/index/{desde}/{hasta}   (fechas YYYY-MM-DD)
     public function index(?string $desde = null, ?string $hasta = null): void
     {
+
+        // chequeo permisos
+        if (!Security::hasPermission(['movimientos_ver'])) {
+            Security::flash('danger', 'Permiso denegado');
+            $this->redirect('/cpee/dashboard');
+        }
+
         $this->requireLogin();
 
         $desde = $desde ?? '';
@@ -54,6 +61,12 @@ class CajaController extends BaseController
     // GET /caja/crear[/{tipo}/{profesional_id}]
     public function crear(?string $tipo = null, ?string $profesionalId = null): void
     {
+        // chequeo permisos
+        if (!Security::hasPermission(['movimientos_crear'])) {
+            Security::flash('danger', 'Permiso denegado');
+            $this->redirect('/cpee/dashboard');
+        }
+
         $this->requireLogin();
 
         $profModel = new ProfesionalModel();
@@ -69,6 +82,12 @@ class CajaController extends BaseController
     // POST /caja/guardar
     public function guardar(): void
     {
+        // chequeo permisos
+        if (!Security::hasPermission(['movimientos_crear'])) {
+            Security::flash('danger', 'Permiso denegado');
+            $this->redirect('/cpee/dashboard');
+        }
+
         $this->requireLogin();
         $this->requirePost();
         $this->requireCsrf();
@@ -128,6 +147,11 @@ class CajaController extends BaseController
     // GET /caja/descargar/{id}   -> sirve el documento adjunto del movimiento
     public function descargar(?string $id = null): void
     {
+        // chequeo permisos
+        if (!Security::hasPermission(['movimientos_ver'])) {
+            Security::flash('danger', 'Permiso denegado');
+            $this->redirect('/cpee/dashboard');
+        }
         $this->requireLogin();
 
         $id = (int)($id ?? 0);

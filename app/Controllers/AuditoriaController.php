@@ -9,12 +9,19 @@ use App\Models\AuditoriaModel;
 
 class AuditoriaController extends BaseController
 {
+    public function __construct()
+    {
+        if (!Security::hasRol('root')) {
+            Security::flash('danger', 'Permiso denegado');
+            $this->redirect('/cpee/dashboard');
+        }
+    }
+
     // GET /auditoria
     // GET /auditoria/index/{tabla}/{limite}
     public function index(?string $tabla = null, ?string $limite = null): void
     {
         $this->requireLogin();
-
         $model = new AuditoriaModel();
 
         $tabla = $tabla !== null ? preg_replace('/[^a-zA-Z0-9_]/', '', $tabla) : '';

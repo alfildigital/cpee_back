@@ -11,9 +11,16 @@ use Exception;
 
 class BoletinOficialController extends BaseController
 {
+
     // GET /boletin-oficial
     public function index(): void
     {
+        // chequeo permisos
+        if (!Security::hasPermission(['boletin_oficial_ver'])) {
+            Security::flash('danger', 'Permiso denegado');
+            $this->redirect('/cpee/dashboard');
+        }
+
         $this->requireLogin();
         $model = new BoletinOficialModel();
         $boletines = $model->getAll();
@@ -27,6 +34,11 @@ class BoletinOficialController extends BaseController
     // GET /boletin-oficial/ver/{id}
     public function ver(?string $id = null): void
     {
+        // chequeo permisos
+        if (!Security::hasPermission(['boletin_oficial_ver'])) {
+            Security::flash('danger', 'Permiso denegado');
+            $this->redirect('/cpee/dashboard');
+        }
         $this->requireLogin();
 
         $id = (int)($id ?? 0);
@@ -49,6 +61,12 @@ class BoletinOficialController extends BaseController
     // GET /boletin-oficial/crear
     public function crear(): void
     {
+        // chequeo permisos
+        if (!Security::hasPermission(['boletin_oficial_crear'])) {
+            Security::flash('danger', 'Permiso denegado');
+            $this->redirect('/cpee/dashboard');
+        }
+
         $this->requireLogin();
         $this->render('boletin_oficial/create', 'Nuevo Boletín - CPEE', [
             'csrf_token' => Security::generateCSRFToken()
@@ -58,6 +76,13 @@ class BoletinOficialController extends BaseController
     // POST /boletin-oficial/guardar
     public function guardar(): void
     {
+
+        // chequeo permisos
+        if (!Security::hasPermission(['boletin_oficial_crear'])) {
+            Security::flash('danger', 'Permiso denegado');
+            $this->redirect('/cpee/dashboard');
+        }
+
         $this->requireLogin();
         $this->requirePost();
         $this->requireCsrf();
@@ -93,6 +118,12 @@ class BoletinOficialController extends BaseController
     // GET /boletin-oficial/editar/{id}
     public function editar(?string $id = null): void
     {
+        // chequeo permisos
+        if (!Security::hasPermission(['boletin_oficial_editar'])) {
+            Security::flash('danger', 'Permiso denegado');
+            $this->redirect('/cpee/dashboard');
+        }
+
         $this->requireLogin();
 
         $id = (int)($id ?? 0);
@@ -118,6 +149,13 @@ class BoletinOficialController extends BaseController
     // POST /boletin-oficial/actualizar
     public function actualizar(): void
     {
+
+        // chequeo permisos
+        if (!Security::hasPermission(['boletin_oficial_editar'])) {
+            Security::flash('danger', 'Permiso denegado');
+            $this->redirect('/cpee/dashboard');
+        }
+
         $this->requireLogin();
         $this->requirePost();
         $this->requireCsrf();
@@ -182,6 +220,12 @@ class BoletinOficialController extends BaseController
     // POST /boletin-oficial/eliminar
     public function eliminar(): void
     {
+        // chequeo permisos
+        if (!Security::hasPermission('boletin_oficial_eliminar')) {
+            Security::flash('danger', 'Permiso denegado');
+            $this->redirect('/cpee/dashboard');
+        }
+
         $this->requireLogin();
         $this->requirePost();
         $this->requireCsrf();

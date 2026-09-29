@@ -23,7 +23,10 @@ class UsuarioModel
         $stmt->execute([':email' => $email]);
         $result = $stmt->fetch();
 
+        // si encuentra el email (si existe el usuario basicamente)
         if ($result) {
+
+            // cargo los roles del usuario
             $rolesStmt = $this->db->prepare("
                 SELECT r.nombre
                 FROM usuario_roles ur
@@ -32,6 +35,17 @@ class UsuarioModel
             ");
             $rolesStmt->execute([':id' => $result['id']]);
             $result['roles'] = $rolesStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
+
+            // cargo los permisos
+            $permisosStmt = $this->db->prepare("
+                SELECT DISTINCT p.nombre
+                FROM usuario_roles ur
+                JOIN rol_permisos rp ON rp.rol_id = ur.rol_id
+                JOIN permisos p ON p.id = rp.permiso_id
+                WHERE ur.usuario_id = :id
+            ");
+            $permisosStmt->execute([':id' => $result['id']]);
+            $result['permisos'] = $permisosStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
         }
 
         return $result ?: null;

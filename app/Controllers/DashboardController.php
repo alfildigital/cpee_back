@@ -11,7 +11,6 @@ class DashboardController extends BaseController
     public function index(): void
     {
         $this->requireLogin();
-
         $db = Database::getInstance()->getConnection();
 
         $counts = [

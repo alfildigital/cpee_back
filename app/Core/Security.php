@@ -38,6 +38,27 @@ class Security
         return !empty($_SESSION['usuario_id']);
     }
 
+    public static function hasPermission(string|array $permisos): bool
+    {
+        self::startSession();
+        $userPermisos = $_SESSION['usuario_permisos'] ?? [];
+        if (is_string($permisos)) {
+            return in_array($permisos, $userPermisos, true);
+        }
+        foreach ($permisos as $p) {
+            if (in_array($p, $userPermisos, true)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static function hasRol(string $rol): bool
+    {
+        self::startSession();
+        return in_array($rol, $_SESSION['usuario_roles'] ?? [], true);
+    }
+
     public static function requireLogin(): void
     {
         if (!self::isLoggedIn()) {
@@ -53,6 +74,7 @@ class Security
         $_SESSION['usuario_nombre'] = $usuario['nombre'] ?? '';
         $_SESSION['usuario_email'] = $usuario['email'] ?? '';
         $_SESSION['usuario_roles'] = $usuario['roles'] ?? [];
+        $_SESSION['usuario_permisos'] = $usuario['permisos'] ?? [];
         // Prevenir session fixation
         self::regenerateSession();
     }
