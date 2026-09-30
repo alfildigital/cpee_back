@@ -1,8 +1,8 @@
-CREATE TYPE estado_matricula AS ENUM ('Activa', 'Suspendida', 'Inactiva');
+-- CREATE TYPE estado_matricula AS ENUM ('Activa', 'Suspendida', 'Inactiva');
 
-CREATE TYPE tipo_movimiento AS ENUM ('Ingreso', 'Egreso');
+-- CREATE TYPE tipo_movimiento AS ENUM ('Ingreso', 'Egreso');
 
-CREATE TYPE rol_usuario AS ENUM ('Admin', 'Tesoreria', 'Mesa de Entradas', 'Directivo');
+-- CREATE TYPE rol_usuario AS ENUM ('Admin', 'Tesoreria', 'Mesa de Entradas', 'Directivo');
 
 CREATE TABLE roles (
     id SERIAL PRIMARY KEY,
