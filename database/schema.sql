@@ -167,7 +167,7 @@ CREATE TABLE profesionales (
     telefono VARCHAR(50),
     localidad VARCHAR(100),
     direccion VARCHAR(200),
-    estado_matricula DEFAULT 'Activa',
+    estado_matricula VARCHAR(20) DEFAULT 'Activa',
     fecha_matriculacion DATE NOT NULL,
     observaciones TEXT,
     foto VARCHAR(500),
