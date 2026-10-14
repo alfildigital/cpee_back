@@ -90,7 +90,7 @@
                     </a>
                 </li>
             <?php endif; ?>
-            <?php if (\App\Core\Security::hasPermission(['usuarios_ver', 'roles_ver'])): ?>
+            <?php if (\App\Core\Security::hasPermission(['auditoria_ver'])): ?>
             <li class="nav-item">
                 <a class="nav-link" href="/cpee/auditoria">
                     <i class="fas fa-fw fa-clipboard-list"></i>
