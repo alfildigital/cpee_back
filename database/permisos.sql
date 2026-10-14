@@ -483,7 +483,7 @@ VALUES (
             SELECT id
             FROM roles
             WHERE
-                nombre = 'admin'
+                nombre = 'root'
         ),
         (
             SELECT id
@@ -507,7 +507,7 @@ VALUES (
             SELECT id
             FROM roles
             WHERE
-                nombre = 'admin'
+                nombre = 'root'
         ),
         (
             SELECT id
@@ -531,7 +531,7 @@ VALUES (
             SELECT id
             FROM roles
             WHERE
-                nombre = 'admin'
+                nombre = 'root'
         ),
         (
             SELECT id
@@ -555,7 +555,7 @@ VALUES (
             SELECT id
             FROM roles
             WHERE
-                nombre = 'admin'
+                nombre = 'root'
         ),
         (
             SELECT id

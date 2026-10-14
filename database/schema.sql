@@ -1,8 +1,8 @@
--- CREATE TYPE estado_matricula AS ENUM ('Activa', 'Suspendida', 'Inactiva');
+CREATE TYPE estado_matricula AS ENUM ('Activa', 'Suspendida', 'Inactiva');
 
--- CREATE TYPE tipo_movimiento AS ENUM ('Ingreso', 'Egreso');
+CREATE TYPE tipo_movimiento AS ENUM ('Ingreso', 'Egreso');
 
--- CREATE TYPE rol_usuario AS ENUM ('Admin', 'Tesoreria', 'Mesa de Entradas', 'Directivo');
+
 
 CREATE TABLE roles (
     id SERIAL PRIMARY KEY,
@@ -167,7 +167,7 @@ CREATE TABLE profesionales (
     telefono VARCHAR(50),
     localidad VARCHAR(100),
     direccion VARCHAR(200),
-    estado estado_matricula DEFAULT 'Activa',
+    estado_matricula DEFAULT 'Activa',
     fecha_matriculacion DATE NOT NULL,
     observaciones TEXT,
     foto VARCHAR(500),
@@ -184,7 +184,7 @@ INSERT INTO
         apellido,
         email,
         telefono,
-        estado,
+        estado_matricula,
         fecha_matriculacion,
         observaciones
     )

@@ -18,13 +18,15 @@
                 <div class="card o-hidden border-0 shadow-lg my-5">
                     <div class="card-body p-0">
                         <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                            <div class="col-lg-6 d-none d-lg-block">
+                                <img src="public/assets/img/logo_login.jpeg" style="margin:1em;padding:1em;" width="120%" alt="">
+                            </div>
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">
+                                        <!-- <h1 class="h4 text-gray-900 mb-4">
                                             <i class="fas fa-university text-primary mr-2"></i>CPEE Gestión
-                                        </h1>
+                                        </h1> -->
                                         <p class="mb-4">Ingrese sus credenciales para acceder al sistema.</p>
                                     </div>
 
@@ -72,9 +74,9 @@ $flash = $flash ?? Security::getFlash();
                                     </form>
 
                                     <hr>
-                                    <div class="text-center small text-muted">
-                                        Colegio Público de la Ingeniería
-                                    </div>
+                                    <!-- <div class="text-center small text-muted">
+                                        Colégio Profesional en Educación Especial
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
