@@ -36,7 +36,7 @@ class ProfesionalesController extends ApiController
             'telefono' => $row['telefono'],
             'localidad' => $row['localidad'],
             'direccion' => $row['direccion'],
-            'estado' => $row['estado'],
+            'estado_matricula' => $row['estado_matricula'],
             'fecha_matriculacion' => $row['fecha_matriculacion'],
             'observaciones' => $row['observaciones'] ?? $row['legajo'] ?? $row['notas'] ?? null,
             'foto' => $row['foto'],
@@ -59,7 +59,7 @@ class ProfesionalesController extends ApiController
         $q = trim((string)($_GET['q'] ?? ''));
         $q = $q === '' ? null : $q;
 
-        $estado = trim((string)($_GET['estado'] ?? ''));
+        $estado = trim((string)($_GET['estado_matricula'] ?? ''));
         $estado = $estado === '' ? null : $estado;
         if ($estado !== null && !in_array($estado, self::ESTADOS, true)) {
             $this->error('Parámetro "estado" inválido.', 422, [
@@ -116,7 +116,7 @@ class ProfesionalesController extends ApiController
             $this->error('Datos inválidos.', 422, $errors);
         }
 
-        $data['estado'] ??= 'Activa';
+        $data['estado_matricula'] ??= 'Activa';
         $data['usuario_abm'] ??= 'API';
 
         // Foto opcional (base64 o data URL)
@@ -269,7 +269,7 @@ class ProfesionalesController extends ApiController
             'telefono' => ['telefono'],
             'localidad' => ['localidad'],
             'direccion' => ['direccion'],
-            'estado' => ['estado'],
+            'estado_matricula' => ['estado_matricula'],
             'fecha_matriculacion' => ['fecha_matriculacion', 'fechaMatriculacion'],
             'observaciones' => ['observaciones', 'legajo', 'nota', 'notas'],
         ];
@@ -311,8 +311,8 @@ class ProfesionalesController extends ApiController
             $errors['fecha_matriculacion'] = 'Formato de fecha inválido. Use YYYY-MM-DD.';
         }
 
-        if (isset($data['estado']) && $data['estado'] !== '' && !in_array($data['estado'], self::ESTADOS, true)) {
-            $errors['estado'] = 'Estado inválido. Valores permitidos: ' . implode(', ', self::ESTADOS) . '.';
+        if (isset($data['estado_matricula']) && $data['estado_matricula'] !== '' && !in_array($data['estado_matricula'], self::ESTADOS, true)) {
+            $errors['estado_matricula'] = 'Estado inválido. Valores permitidos: ' . implode(', ', self::ESTADOS) . '.';
         }
 
         if (isset($data['email']) && $data['email'] !== '' && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
