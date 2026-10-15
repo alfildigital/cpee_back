@@ -34,8 +34,8 @@ class ProfesionalModel
         }
 
         if ($estado !== null && $estado !== '') {
-            $where[] = "estado = :estado";
-            $params[':estado'] = $estado;
+            $where[] = "estado_matricula = :estado_matricula";
+            $params[':estado_matricula'] = $estado;
         }
 
         return [$where, $params];
@@ -57,8 +57,8 @@ class ProfesionalModel
         if (isset($params[':q'])) {
             $stmt->bindValue(':q', $params[':q'], PDO::PARAM_STR);
         }
-        if (isset($params[':estado'])) {
-            $stmt->bindValue(':estado', $params[':estado'], PDO::PARAM_STR);
+        if (isset($params[':estado_matriula'])) {
+            $stmt->bindValue(':estado_matricula', $params[':estado_matricula'], PDO::PARAM_STR);
         }
         $stmt->execute();
         return $stmt->fetchAll();
@@ -89,8 +89,8 @@ class ProfesionalModel
     public function create(array $data): int
     {
         $stmt = $this->db->prepare("
-            INSERT INTO profesionales (nro_matricula, DNI, nombre, apellido, email, telefono, localidad, direccion, estado, fecha_matriculacion, observaciones, foto, usuario_abm)
-            VALUES (:nro_matricula, :dni, :nombre, :apellido, :email, :telefono, :localidad, :direccion, :estado, :fecha_matriculacion, :observaciones, :foto, :usuario_abm)
+            INSERT INTO profesionales (nro_matricula, DNI, nombre, apellido, email, telefono, localidad, direccion, estado_matricula, fecha_matriculacion, observaciones, foto, usuario_abm)
+            VALUES (:nro_matricula, :dni, :nombre, :apellido, :email, :telefono, :localidad, :direccion, :estado_matricula, :fecha_matriculacion, :observaciones, :foto, :usuario_abm)
             RETURNING id
         ");
         $stmt->execute([
@@ -102,7 +102,7 @@ class ProfesionalModel
             ':telefono' => $data['telefono'] ?? null,
             ':localidad' => $data['localidad'] ?? null,
             ':direccion' => $data['direccion'] ?? null,
-            ':estado' => $data['estado'] ?? 'Activa',
+            ':estado_matricula' => $data['estado_matricula'] ?? 'Activa',
             ':fecha_matriculacion' => $data['fecha_matriculacion'],
             ':observaciones' => $data['observaciones'] ?? null,
             ':foto' => $data['foto'] ?? null,
@@ -123,7 +123,7 @@ class ProfesionalModel
                 telefono = :telefono, 
                 localidad = :localidad,
                 direccion = :direccion,
-                estado = :estado, 
+                estado_matricula = :estado_matricula, 
                 fecha_matriculacion = :fecha_matriculacion, 
                 observaciones = :observaciones,
                 foto = :foto,
@@ -141,7 +141,7 @@ class ProfesionalModel
             ':telefono' => $data['telefono'] ?? null,
             ':localidad' => $data['localidad'] ?? null,
             ':direccion' => $data['direccion'] ?? null,
-            ':estado' => $data['estado'] ?? 'Activa',
+            ':estado_matricula' => $data['estado_matricula'] ?? 'Activa',
             ':fecha_matriculacion' => $data['fecha_matriculacion'],
             ':observaciones' => $data['observaciones'] ?? null,
             ':foto' => $data['foto'] ?? null,

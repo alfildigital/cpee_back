@@ -20,10 +20,10 @@
                 <h6 class="m-0 font-weight-bold text-primary">Datos del Matriculado</h6>
                 <?php
                 $badgeClass = 'badge-success';
-                if ($profesional['estado'] === 'Suspendida') $badgeClass = 'badge-warning';
-                if ($profesional['estado'] === 'Inactiva') $badgeClass = 'badge-danger';
+                if ($profesional['estado_matricula'] === 'Suspendida') $badgeClass = 'badge-warning';
+                if ($profesional['estado_matricula'] === 'Inactiva') $badgeClass = 'badge-danger';
                 ?>
-                <span class="badge badge-pill <?= $badgeClass ?>"><?= htmlspecialchars($profesional['estado']) ?></span>
+                <span class="badge badge-pill <?= $badgeClass ?>"><?= htmlspecialchars($profesional['estado_matricula']) ?></span>
             </div>
             <div class="card-body">
                 <?php if (!empty($profesional['foto'])): ?>

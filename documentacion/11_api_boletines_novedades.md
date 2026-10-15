@@ -19,10 +19,6 @@ Authorization: Bearer <API_API_KEY>
 
 El token se configura en `.env`:
 
-```
-API_ENABLED=true
-API_API_KEY=5d6dd9d5bf47c294b1a49222930870965bc80bd6b442669df701ee695046ba25
-```
 
 - Si falta, es inválido o `API_ENABLED` está en `false` → **HTTP 401** con header `WWW-Authenticate: Bearer`.
 - La comparación se realiza con `hash_equals()` (tiempo constante).

@@ -42,6 +42,7 @@ final class Upload
      */
     public static function store(array $file, string $subdir = 'caja', ?array $allowed = null): ?array
     {
+
         if (!isset($file['error']) || $file['error'] === UPLOAD_ERR_NO_FILE) {
             return null; // No se adjuntó archivo (campo opcional)
         }
@@ -73,7 +74,7 @@ final class Upload
         if (!is_dir($dirDestino) && !mkdir($dirDestino, 0755, true)) {
             throw new Exception('No se pudo crear el directorio de destino.');
         }
-
+        
         $rutaAbsoluta = $dirDestino . '/' . $nombreDisco;
         if (!move_uploaded_file($file['tmp_name'], $rutaAbsoluta)) {
             throw new Exception('No se pudo guardar el archivo en el servidor.');

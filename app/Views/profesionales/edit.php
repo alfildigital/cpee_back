@@ -77,11 +77,11 @@
                     <input type="date" class="form-control" id="fecha_matriculacion" name="fecha_matriculacion" value="<?= htmlspecialchars($profesional['fecha_matriculacion']) ?>" required>
                 </div>
                 <div class="col-md-6 text-start">
-                    <label for="estado" class="form-label">Estado</label>
-                    <select class="form-control" id="estado" name="estado">
-                        <option value="Activa" <?= $profesional['estado'] === 'Activa' ? 'selected' : '' ?>>Activa</option>
-                        <option value="Suspendida" <?= $profesional['estado'] === 'Suspendida' ? 'selected' : '' ?>>Suspendida</option>
-                        <option value="Inactiva" <?= $profesional['estado'] === 'Inactiva' ? 'selected' : '' ?>>Inactiva</option>
+                    <label for="estado_matricula" class="form-label">Estado</label>
+                    <select class="form-control" id="estado_matricula" name="estado_matricula">
+                        <option value="Activa" <?= $profesional['estado_matricula'] === 'Activa' ? 'selected' : '' ?>>Activa</option>
+                        <option value="Suspendida" <?= $profesional['estado_matricula'] === 'Suspendida' ? 'selected' : '' ?>>Suspendida</option>
+                        <option value="Inactiva" <?= $profesional['estado_matricula'] === 'Inactiva' ? 'selected' : '' ?>>Inactiva</option>
                     </select>
                 </div>
             </div>

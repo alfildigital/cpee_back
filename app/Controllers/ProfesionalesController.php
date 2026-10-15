@@ -33,7 +33,7 @@ class ProfesionalesController extends BaseController
         $id = (int)($id ?? 0);
         if ($id <= 0) {
             Security::flash('danger', 'ID de matriculado no provisto.');
-            $this->redirect('/cpee/profesionales');
+            $this->redirect('profesionales');
         }
 
         $model = new ProfesionalModel();
@@ -41,7 +41,7 @@ class ProfesionalesController extends BaseController
 
         if (!$profesional) {
             Security::flash('danger', 'Matriculado no encontrado.');
-            $this->redirect('/cpee/profesionales');
+            $this->redirect('profesionales');
         }
 
         $this->render('profesionales/show', 'Detalle de Matriculado - CPEE', ['profesional' => $profesional]);
@@ -88,10 +88,10 @@ class ProfesionalesController extends BaseController
             );
 
             Security::flash('success', 'Matriculado registrado correctamente.');
-            $this->redirect('/cpee/profesionales');
+            $this->redirect('profesionales');
         } catch (Exception $e) {
             Security::flash('danger', $e->getMessage());
-            $this->redirect('/cpee/profesionales/crear');
+            $this->redirect('profesionales/crear');
         }
     }
 
@@ -103,7 +103,7 @@ class ProfesionalesController extends BaseController
         $id = (int)($id ?? 0);
         if ($id <= 0) {
             Security::flash('danger', 'ID de matriculado no provisto.');
-            $this->redirect('/cpee/profesionales');
+            $this->redirect('profesionales');
         }
 
         $model = new ProfesionalModel();
@@ -111,7 +111,7 @@ class ProfesionalesController extends BaseController
 
         if (!$profesional) {
             Security::flash('danger', 'Matriculado no encontrado.');
-            $this->redirect('/cpee/profesionales');
+            $this->redirect('profesionales');
         }
 
         $this->render('profesionales/edit', 'Editar Matriculado - CPEE', [
@@ -174,11 +174,11 @@ class ProfesionalesController extends BaseController
             );
 
             Security::flash('success', 'Matriculado actualizado correctamente.');
-            $this->redirect('/cpee/profesionales');
+            $this->redirect('profesionales');
         } catch (Exception $e) {
             Security::flash('danger', $e->getMessage());
             $id = (int)($_POST['id'] ?? 0);
-            $this->redirect('/cpee/profesionales/editar/' . $id);
+            $this->redirect('profesionales/editar/' . $id);
         }
     }
 
@@ -218,10 +218,10 @@ class ProfesionalesController extends BaseController
             );
 
             Security::flash('success', 'Matriculado eliminado correctamente.');
-            $this->redirect('/cpee/profesionales');
+            $this->redirect('profesionales');
         } catch (Exception $e) {
             Security::flash('danger', $e->getMessage());
-            $this->redirect('/cpee/profesionales');
+            $this->redirect('profesionales');
         }
     }
 
@@ -233,7 +233,7 @@ class ProfesionalesController extends BaseController
         $id = (int)($id ?? 0);
         if ($id <= 0) {
             Security::flash('danger', 'ID de matriculado no provisto.');
-            $this->redirect('/cpee/profesionales');
+            $this->redirect('profesionales');
         }
 
         $model = new ProfesionalModel();
@@ -241,7 +241,7 @@ class ProfesionalesController extends BaseController
 
         if (!$profesional) {
             Security::flash('danger', 'Matriculado no encontrado.');
-            $this->redirect('/cpee/profesionales');
+            $this->redirect('profesionales');
         }
 
         Security::logAudit(
@@ -260,21 +260,23 @@ class ProfesionalesController extends BaseController
         $azul   = [16, 55, 110];
         $gris   = [110, 110, 110];
 
-        $pdf = new Pdf(Pdf::ORIENT_HORIZONTAL, $ancho, $alto);
 
+        $pdf = new Pdf(Pdf::ORIENT_HORIZONTAL, $ancho, $alto);
+        
         // Fondo blanco (sin bordes)
         $pdf->setFillColor(255, 255, 255);
         $pdf->rect(0, 0, $ancho, $alto, 'F');
-
+        
         // Banda institucional superior (a sangre)
         $pdf->setFillColor($azul[0], $azul[1], $azul[2]);
         $pdf->rect(0, 0, $ancho, 30, 'F');
         $pdf->setTextColor(255, 255, 255);
         $pdf->setFont('Helvetica', 'B', 8);
         $pdf->text($ancho / 2, 11, 'CPEE - COLEGIO DE PROFESIONALES', 'C');
+
         $pdf->setFont('Helvetica', '', 7);
         $pdf->text($ancho / 2, 22, 'Carnet de Matriculado', 'C');
-
+        
         // Zona izquierda: foto
         $fotoX = 10;
         $fotoY = 40;
@@ -286,11 +288,13 @@ class ProfesionalesController extends BaseController
         $pdf->setLineWidth(0.8);
         $pdf->rect($fotoX, $fotoY, $fotoW, $fotoH, 'D');
 
+   
         $rutaFoto = $profesional['foto'] ?? null;
         $fotoIncrustada = false;
         if ($rutaFoto) {
             $archivoFoto = ROOT_PATH . '/' . ltrim($rutaFoto, '/');
             $fotoIncrustada = $pdf->image($fotoX, $fotoY, $fotoW, $fotoH, $archivoFoto);
+    
         }
 
         if (!$fotoIncrustada) {
@@ -331,9 +335,9 @@ class ProfesionalesController extends BaseController
 
         // Estado (badge coloreado a lo ancho)
         $estadoColor = [0, 150, 60];
-        if ($profesional['estado'] === 'Suspendida') {
+        if ($profesional['estado_matricula'] === 'Suspendida') {
             $estadoColor = [230, 160, 0];
-        } elseif ($profesional['estado'] === 'Inactiva') {
+        } elseif ($profesional['estado_matricula'] === 'Inactiva') {
             $estadoColor = [200, 40, 40];
         }
         $estadoY = $filaY + $filaH * 4 + 2; // 150
@@ -341,7 +345,7 @@ class ProfesionalesController extends BaseController
         $pdf->rect(10, $estadoY, $ancho - 20, 14, 'F');
         $pdf->setTextColor(255, 255, 255);
         $pdf->setFont('Helvetica', 'B', 8);
-        $pdf->text($ancho / 2, $estadoY + 9, mb_strtoupper($profesional['estado'], 'UTF-8'), 'C');
+        $pdf->text($ancho / 2, $estadoY + 9, mb_strtoupper($profesional['estado_matricula'], 'UTF-8'), 'C');
 
         // Pie informativo
         $pdf->setFont('Helvetica', '', 5);
@@ -420,7 +424,7 @@ class ProfesionalesController extends BaseController
 
         $id = (int)($id ?? 0);
         if ($id <= 0) {
-            $this->redirect('/cpee/profesionales');
+            $this->redirect('profesionales');
         }
 
         $model = new ProfesionalModel();
@@ -428,13 +432,13 @@ class ProfesionalesController extends BaseController
 
         if (!$profesional || empty($profesional['foto'])) {
             Security::flash('danger', 'El matriculado no posee foto.');
-            $this->redirect('/cpee/profesionales');
+            $this->redirect('profesionales');
         }
 
         $rutaAbsoluta = ROOT_PATH . '/' . $profesional['foto'];
         if (!is_file($rutaAbsoluta)) {
             Security::flash('danger', 'El archivo de foto no existe en el servidor.');
-            $this->redirect('/cpee/profesionales');
+            $this->redirect('profesionales');
         }
 
         header('Content-Type: image/jpeg');

@@ -73,7 +73,7 @@ class ObrasSocialesController extends BaseController
             }
 
             // Logo opcional (solo PNG)
-            $logo = Upload::store($_FILES['logo'] ?? [], 'logos', self::LOGO_MIME);
+            $logo = Upload::store($_FILES['logo'] ?? [], 'logos');
             $datosLimpios['logo'] = $logo['ruta'] ?? null;
             $datosLimpios['usuario_abm'] = $this->getCurrentUserAmb();
 
@@ -144,7 +144,7 @@ class ObrasSocialesController extends BaseController
             }
 
             // Logo: nueva subida / remover / conservar
-            $nuevoLogo = Upload::store($_FILES['logo'] ?? [], 'logos', self::LOGO_MIME);
+            $nuevoLogo = Upload::store($_FILES['logo'] ?? [], 'logos');
             $removerLogo = isset($_POST['remover_logo']) && $_POST['remover_logo'] === '1';
 
             if ($nuevoLogo) {

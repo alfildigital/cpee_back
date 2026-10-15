@@ -76,8 +76,8 @@
                     <input type="date" class="form-control" id="fecha_matriculacion" name="fecha_matriculacion" required>
                 </div>
                 <div class="col-md-6 text-start">
-                    <label for="estado" class="form-label">Estado Inicial</label>
-                    <select class="form-control" id="estado" name="estado">
+                    <label for="estado_matricula" class="form-label">Estado Inicial</label>
+                    <select class="form-control" id="estado_matricula" name="estado_matricula">
                         <option value="Activa">Activa</option>
                         <option value="Suspendida">Suspendida</option>
                         <option value="Inactiva">Inactiva</option>

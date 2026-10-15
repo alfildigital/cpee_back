@@ -37,10 +37,10 @@
                                 <td>
                                     <?php
                                     $badgeClass = 'badge-success';
-                                    if ($p['estado'] === 'Suspendida') $badgeClass = 'badge-warning';
-                                    if ($p['estado'] === 'Inactiva') $badgeClass = 'badge-danger';
+                                    if ($p['estado_matricula'] === 'Suspendida') $badgeClass = 'badge-warning';
+                                    if ($p['estado_matricula'] === 'Inactiva') $badgeClass = 'badge-danger';
                                     ?>
-                                    <span class="badge <?= $badgeClass ?>"><?= htmlspecialchars($p['estado']) ?></span>
+                                    <span class="badge <?= $badgeClass ?>"><?= htmlspecialchars($p['estado_matricula']) ?></span>
                                 </td>
                                 <td><?= htmlspecialchars($p['fecha_matriculacion']) ?></td>
                                 <td class="text-nowrap">
